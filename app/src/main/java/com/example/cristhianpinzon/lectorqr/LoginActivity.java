@@ -1,0 +1,211 @@
+package com.example.cristhianpinzon.lectorqr;
+
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+
+import com.example.cristhianpinzon.lectorqr.Logica.Usuario;
+import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
+import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
+import com.example.cristhianpinzon.lectorqr.Servicios.ServicioLogin;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class LoginActivity extends AppCompatActivity {
+
+    private static final String TAG = "LoginActivity";
+
+    private EditText txtUser;
+    private EditText txtPassword;
+    private Button btnLogin;
+    private TextView linkSingup;
+    private DatabaseAccess databaseAccess;
+    private User usuarioLogueado;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_login);
+        databaseAccess = new DatabaseAccess(this);
+        beginComponents();
+        String aux = traerUsuario() ?"TRUE" :"FALSE" ;
+        Log.e("usuariologueado?", aux);
+        if (traerUsuario()) {
+            cargarUsuarioActivity();
+        }
+
+    }
+    private void beginComponents() {
+        txtUser = (EditText) findViewById(R.id.input_user);
+        txtPassword = (EditText) findViewById(R.id.input_password);
+        btnLogin = (Button) findViewById(R.id.btn_login);
+        btnLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                login();
+
+            }
+        });
+    }
+    private void cargarUsuarioActivity() {
+
+        Intent intent = new Intent(getApplicationContext(),UsuarioActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
+    public boolean traerUsuario (){
+        try {
+            databaseAccess.open();
+            String id_user = databaseAccess.getUsers().get(0).getId_user();
+            String name_user = databaseAccess.getUsers().get(0).getName_user();
+            String id_tienda = databaseAccess.getUsers().get(0).getId_tienda();
+            String nombre_tienda = databaseAccess.getUsers().get(0).getNombre_tienda();
+            String direccion_tienda = databaseAccess.getUsers().get(0).getDireccion_tienda();
+            String telefono_tienda = databaseAccess.getUsers().get(0).getTelefono_tienda();
+            String tipo_tienda = databaseAccess.getUsers().get(0).getTipo_tienda();
+            String marca_tienda = databaseAccess.getUsers().get(0).getMarca_tienda();
+            String logo_tienda= databaseAccess.getUsers().get(0).getLogo_tienda();
+            usuarioLogueado = new User(id_user,name_user,id_tienda,nombre_tienda,direccion_tienda,telefono_tienda,tipo_tienda,marca_tienda,logo_tienda);
+
+            return true;
+        }catch (Exception e){
+            Log.e("ERROR","Error trayendo usuario de sqlite"  + e.getMessage());
+        }
+
+        return false;
+    }
+
+
+
+    private void login() {
+        Log.d(TAG,"LOGIN");
+        if (!validateInputs()){
+            onLoginFailed();
+            return;
+        }
+
+        String user = txtUser.getText().toString();
+        String pass = txtPassword.getText().toString();
+
+        realizarLogin(user,pass);
+
+    }
+
+    public void realizarLogin(final String user, final String pass){
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(getResources().getString(R.string.url_server))
+                .build();
+        ServicioLogin servicioLogin = retrofit.create(ServicioLogin.class);
+
+        Map<String,String> datos = new HashMap<>();
+        datos.put("user",user);
+        datos.put("pass",pass);
+
+        Call<Usuario> call = servicioLogin.traerUsuarioLogin(datos);
+
+        call.enqueue(new Callback<Usuario>() {
+            @Override
+            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+                try {
+                    if (response.body().getName_user().equals("FALSE") || response.body().getId_user() == null){
+                        onLoginFailed();
+                    }else {
+                        //Toast.makeText(LoginActivity.this, "Inicio Sesion", Toast.LENGTH_SHORT).show();
+                        User loguearUsuario = new User(
+                                response.body().getId_user(),
+                                response.body().getName_user(),
+                                response.body().getTienda().getId(),
+                                response.body().getTienda().getNombre(),
+                                response.body().getTienda().getDireccion(),
+                                response.body().getTienda().getTelefono(),
+                                response.body().getTienda().getTipo(),
+                                response.body().getTienda().getMarca(),
+                                response.body().getTienda().getLogo_image()
+                        );
+                        loguearUsuarioApp(loguearUsuario);
+                        Log.w("Login","id-> " + response.body().getId_user());
+                        Log.w("Login","name-> " + response.body().getName_user());
+                        Log.w("Login","tiendanombre-> " + response.body().getTienda().getNombre());
+                        Log.w("Login","tiendaid-> " + response.body().getTienda().getId());
+                        Log.w("Login","tipo tienda -> " + response.body().getTienda().getTipo());
+                    }
+                }catch (Exception e){
+                    onLoginFailed();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<Usuario> call, Throwable t) {
+                onLoginFailed();
+            }
+        });
+    }
+
+    private void loguearUsuarioApp(User loguearUsuario) {
+        // // TODO: 09/08/2017 AGREGAR USUARIO A SQLITE
+        //Log.e("USERAPPRETROFIT", loguearUsuario.toString());
+        try {
+            databaseAccess.open();
+            databaseAccess.addUser(loguearUsuario);
+            databaseAccess.close();
+            cargarUsuarioActivity();
+        }catch (Exception e){
+            Log.e("ERROR","Error al agregar en sqlite" +e.getMessage());
+            onLoginFailed();
+        }
+
+    }
+
+    public void onLoginFailed(){
+        Toast.makeText(getBaseContext(),"Error al logearse",Toast.LENGTH_LONG).show();
+        btnLogin.setEnabled(true);
+    }
+
+    public boolean validateInputs(){
+        boolean valid = true;
+
+        String user = txtUser.getText().toString();
+        String pass = txtPassword.getText().toString();
+
+        if (user.isEmpty()) {
+            txtUser.setError("Ingrese usuario valido");
+        }
+        else {
+            txtUser.setError(null);
+        }
+        if (pass.isEmpty() || pass.length() < 4 || pass.length() > 10 ){
+            txtPassword.setError("Ingrese entre 4 y 10 caracteres alfanumericos");
+            valid = false;
+        }
+        else {
+            txtPassword.setError(null);
+        }
+        return valid;
+
+    }
+    private void addUser (User user) {
+        databaseAccess.open();
+        databaseAccess.addUser(user);
+        databaseAccess.close();
+    }
+}
