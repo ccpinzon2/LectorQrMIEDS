@@ -52,11 +52,6 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
             cargarLoginPrincipal();
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-            permission_request();
-        }else {
-            QrScanner(null);
-        }
         _btnScaner = (Button) findViewById(R.id.btn_scan);
     }
 
@@ -122,7 +117,10 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
             @Override
             public void onPermissionGranted(PermissionGrantedResponse response) {
                 Toast.makeText(UsuarioActivity.this, "Permisos obtenidos", Toast.LENGTH_SHORT).show();
-                QrScanner(null);
+                mScannerView = new ZXingScannerView(UsuarioActivity.this);   // Programmatically initialize the scanner view
+                setContentView(mScannerView);
+                mScannerView.setResultHandler(UsuarioActivity.this); // Register ourselves as a handler for scan results.
+                mScannerView.startCamera();         // Start camera
             }
 
             @Override
@@ -147,15 +145,19 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
     }
 
     public void QrScanner(View view){
-        mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
-        setContentView(mScannerView);
-        mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
-        mScannerView.startCamera();         // Start camera
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            permission_request();
+        }else {
+            mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
+            setContentView(mScannerView);
+            mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
+            mScannerView.startCamera();         // Start camera
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mScannerView.stopCamera();
+        //mScannerView.stopCamera();
     }
 }
