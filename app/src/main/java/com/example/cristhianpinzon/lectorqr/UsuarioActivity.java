@@ -11,8 +11,11 @@ import android.widget.Toast;
 
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
+import com.google.zxing.Result;
 
-public class UsuarioActivity extends AppCompatActivity {
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
+
+public class UsuarioActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     private User user;
     private DatabaseAccess databaseAccess;
@@ -23,10 +26,13 @@ public class UsuarioActivity extends AppCompatActivity {
     private TextView _txtDireccion;
     private TextView _txtTelefono;
     private TextView _txtMarca;
+    private ZXingScannerView mScannerView;
+
 
     private Button _btnCerrarSesion;
+    private Button _btnScaner;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_usuario);
         databaseAccess = new DatabaseAccess(this);
@@ -36,6 +42,8 @@ public class UsuarioActivity extends AppCompatActivity {
         }catch (Exception e){
             cargarLoginPrincipal();
         }
+
+        _btnScaner = (Button) findViewById(R.id.btn_scan);
 
     }
 
@@ -57,6 +65,7 @@ public class UsuarioActivity extends AppCompatActivity {
                 cerrarSesion();
             }
         });
+
 
     }
 
@@ -81,4 +90,29 @@ public class UsuarioActivity extends AppCompatActivity {
         databaseAccess.close();
     }
 
+    @Override
+    public void handleResult(Result rawResult) {
+
+        Log.e("Resultado - > ", rawResult.getText()); // Prints scan results<br />
+        Log.e("Tipo de escaneado -> ", rawResult.getBarcodeFormat().toString());
+
+
+    }
+
+    public void QrScanner(View view){
+
+
+        mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
+        setContentView(mScannerView);
+
+        mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
+        mScannerView.startCamera();         // Start camera
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mScannerView.stopCamera();
+    }
 }
