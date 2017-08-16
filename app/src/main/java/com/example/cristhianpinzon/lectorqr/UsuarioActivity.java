@@ -100,8 +100,14 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
 
     @Override
     public void handleResult(Result rawResult) {
-        Log.e("Resultado - > ", rawResult.getText()); // Prints scan results<br />
-        Log.e("Tipo de escaneado -> ", rawResult.getBarcodeFormat().toString());
+        cambiarPuntaje(rawResult.getText());
+    }
+
+    private void cambiarPuntaje(String iduser) {
+        Log.e("Resultado - > ", iduser); // Prints scan results<br />
+        Intent intent = new Intent(getApplicationContext(),PuntajeActivity.class);
+        intent.putExtra("iduser",iduser);
+        startActivity(intent);
     }
 
     private void permission_request(){

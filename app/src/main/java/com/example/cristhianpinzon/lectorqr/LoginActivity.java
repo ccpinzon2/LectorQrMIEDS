@@ -110,6 +110,12 @@ public class LoginActivity extends AppCompatActivity {
 
     public void realizarLogin(final String user, final String pass){
 
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this,R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Iniciando Sesion");
+        progressDialog.show();
+
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(getResources().getString(R.string.url_server))
@@ -152,11 +158,14 @@ public class LoginActivity extends AppCompatActivity {
                     onLoginFailed();
                 }
 
+                progressDialog.dismiss();
+
             }
 
             @Override
             public void onFailure(Call<Usuario> call, Throwable t) {
                 onLoginFailed();
+                progressDialog.dismiss();
             }
         });
     }
