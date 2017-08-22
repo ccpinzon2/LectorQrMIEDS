@@ -12,8 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.example.cristhianpinzon.lectorqr.Logica.Empleado;
 import com.example.cristhianpinzon.lectorqr.Logica.Usuario;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
+import com.example.cristhianpinzon.lectorqr.Persistence.logic.Employee;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioLogin;
 
@@ -147,14 +149,20 @@ public class LoginActivity extends AppCompatActivity {
                                 response.body().getTienda().getMarca(),
                                 response.body().getTienda().getLogo_image()
                         );
-                        loguearUsuarioApp(loguearUsuario);
-                        Log.w("Login","id-> " + response.body().getId_user());
-                        Log.w("Login","name-> " + response.body().getName_user());
-                        Log.w("Login","tiendanombre-> " + response.body().getTienda().getNombre());
-                        Log.w("Login","tiendaid-> " + response.body().getTienda().getId());
-                        Log.w("Login","tipo tienda -> " + response.body().getTienda().getTipo());
+
+
+
+                        loguearUsuarioApp(loguearUsuario ,  response.body().getTienda().getList_empleado());
+//                        Log.w("Login","id-> " + response.body().getId_user());
+//                        Log.w("Login","name-> " + response.body().getName_user());
+//                        Log.w("Login","tiendanombre-> " + response.body().getTienda().getNombre());
+//                        Log.w("Login","tiendaid-> " + response.body().getTienda().getId());
+//                        Log.w("Login","tipo tienda -> " + response.body().getTienda().getTipo());
+//                        Log.w("Login","empleados -> " + response.body().getTienda().getList_empleado().get(0).getNombre_empleado());
+
                     }
                 }catch (Exception e){
+                    Log.e("ErrorRetrofit",e.getMessage());
                     onLoginFailed();
                 }
 
@@ -170,14 +178,31 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void loguearUsuarioApp(User loguearUsuario) {
+    private void loguearUsuarioApp(User loguearUsuario, List<Empleado> list_empleado) {
         // // TODO: 09/08/2017 AGREGAR USUARIO A SQLITE
         //Log.e("USERAPPRETROFIT", loguearUsuario.toString());
         try {
             databaseAccess.open();
             databaseAccess.addUser(loguearUsuario);
+
+            if (list_empleado == null){
+                Log.w("logueo","Lista Nula");
+                // entra direcatamente a escanear QR
+                cargarUsuarioActivity();
+            }else {
+
+                for (Empleado emp : list_empleado ) {
+                    Employee employee =  new Employee(emp.getCedula(),emp.getNombre_empleado(),emp.getApellido_empleado());
+                    databaseAccess.open();
+                    databaseAccess.addEmployee(employee);
+                    databaseAccess.close();
+                }
+                //cargarListaUsuarios
+                Log.w("logueo","CARGAR LISTA DE USUARIOS");
+
+            }
             databaseAccess.close();
-            cargarUsuarioActivity();
+
         }catch (Exception e){
             Log.e("ERROR","Error al agregar en sqlite" +e.getMessage());
             onLoginFailed();

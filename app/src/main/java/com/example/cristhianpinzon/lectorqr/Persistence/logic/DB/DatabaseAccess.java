@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.example.cristhianpinzon.lectorqr.Persistence.logic.Employee;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
 
 import java.util.ArrayList;
@@ -67,9 +68,27 @@ public class DatabaseAccess {
         return list;
     }
 
+    public List<Employee> getEmployees(){
+
+        List<Employee> list = new ArrayList<>();
+        Cursor cursor = database.rawQuery("SELECT * FROM empleado",null);
+        cursor.moveToFirst();
+
+        while (!cursor.isAfterLast()){
+            String ced = cursor.getString(0);
+            String nom = cursor.getString(1);
+            String ape = cursor.getString(2);
+            list.add(new Employee(ced,nom,ape));
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return list;
+    }
+
     public void deleteUser (){
 
         database.execSQL("DELETE FROM usuario");
+        database.execSQL("DELETE FROM empleado");
 
     }
 
@@ -92,6 +111,22 @@ public class DatabaseAccess {
         }else {
             Log.e("DATABASEACCESS","Error adduser en el metodo");
         }
+    }
+
+    public void addEmployee (Employee employee){
+
+        if (employee!=null){
+            ContentValues values = new ContentValues();
+            values.put("cedula",employee.getCedula());
+            values.put("nombre_empleado",employee.getNombre_empleado());
+            values.put("apellido_empleado",employee.getApellido_empleado());
+            database.insert("empleado",null,values);
+            database.close();
+        }else {
+            Log.e("DATABASEACCESS","Error addEmployee en el metodo");
+
+        }
+
     }
 
 

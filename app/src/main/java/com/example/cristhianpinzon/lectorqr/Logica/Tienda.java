@@ -1,5 +1,8 @@
 package com.example.cristhianpinzon.lectorqr.Logica;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Cristhian Pinzon on 09/08/2017.
  */
@@ -12,6 +15,11 @@ public class Tienda {
     private String tipo;
     private String marca;
     private String logo_image;
+    private List<Empleado> list_empleado;
+
+    public List<Empleado> getList_empleado() {
+        return list_empleado;
+    }
 
     public String getId() {
         return id;

@@ -21,7 +21,8 @@
         </activity>
         <activity android:name=".UsuarioActivity" />
         <activity android:name=".PuntajeActivity" />
-        <activity android:name=".RedAcmPtsActivity"></activity>
+        <activity android:name=".RedAcmPtsActivity" />
+        <activity android:name=".LoginEmpleadosActivity"></activity>
     </application>
 
 </manifest>
