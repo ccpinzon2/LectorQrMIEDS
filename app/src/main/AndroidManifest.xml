@@ -20,7 +20,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".UsuarioActivity" />
-        <activity android:name=".PuntajeActivity"></activity>
+        <activity android:name=".PuntajeActivity" />
+        <activity android:name=".RedAcmPtsActivity"></activity>
     </application>
 
 </manifest>
