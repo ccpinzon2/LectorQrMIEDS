@@ -19,7 +19,7 @@
 
         <TextView
             android:layout_gravity="center_horizontal"
-            android:id="@+id/txtNombreUsuario"
+            android:id="@+id/txtNombreUsuarioApp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CCPINZON USUARIO"
@@ -27,7 +27,7 @@
             android:paddingBottom="5dp"/>
         <TextView
             android:layout_gravity="center_horizontal"
-            android:id="@+id/txtEmailUser"
+            android:id="@+id/txtEmailUserApp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="CCPINZON@gmail.com"
@@ -62,10 +62,17 @@
                     android:text="ID Usuario"/>
 
                 <TextView
+                    android:id="@+id/textView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
-                    android:text="Telefono"/>
+                    android:text="Tipo Vehiculo"
+                    android:textSize="18sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Telefono"
+                    android:textSize="18sp" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,13 +89,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/txtIdUser"
+                    android:id="@+id/txtIdUserApp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:text="I4354356"/>
                 <TextView
-                    android:id="@+id/txtTelefonoUser"
+                    android:id="@+id/txtTipoVehiculo"
+                    android:textSize="18sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="4356456"/>
+                <TextView
+                    android:id="@+id/txtTelefonoUserApp"
                     android:textSize="18sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -103,9 +116,9 @@
                 <TextView
                     android:id="@+id/txtPtsFidelizacion"
                     android:layout_width="match_parent"
-                    android:textSize="18sp"
                     android:layout_height="wrap_content"
-                    android:text="234"/>
+                    android:text="234"
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </LinearLayout>
