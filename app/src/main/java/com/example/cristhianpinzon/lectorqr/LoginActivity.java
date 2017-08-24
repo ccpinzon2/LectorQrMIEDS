@@ -31,7 +31,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "LoginActivity";
+    private static final String TAG = "LoginActivityClass";
 
     private EditText txtUser;
     private EditText txtPassword;
@@ -46,13 +46,37 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         databaseAccess = new DatabaseAccess(this);
         beginComponents();
-        String aux = traerUsuario() ?"TRUE" :"FALSE" ;
-        Log.e("usuariologueado?", aux);
-        if (traerUsuario()) {
+
+        validarSesion();
+    }
+
+    private void validarSesion() {
+        Log.w(TAG, "validarSesion: " + traerUsuario() );
+        if (traerUsuario().equals("EDS")){
+            //cargarListaEmpleadosActivity();
+            databaseAccess.open();
+            //Log.w(TAG, "empleadologueado: " + databaseAccess.getEmployeeLogueado().toString() );
+            if (databaseAccess.getEmployeeLogueado() != null){
+                cargarEmpleadoAcitivy();
+            }else {
+                cargarListaEmpleadosActivity();
+            }
+            databaseAccess.close();
+
+        }else if (traerUsuario().equals("SINTIENDA")){
+            //cargarEmpleadoAcitivy();
+
+        }else {
             cargarUsuarioActivity();
         }
-
     }
+
+    private void cargarEmpleadoAcitivy() {
+        Intent intent = new Intent(getApplicationContext(),EmpleadoActivity.class);
+        startActivity(intent);
+    }
+
+
     private void beginComponents() {
         txtUser = (EditText) findViewById(R.id.input_user);
         txtPassword = (EditText) findViewById(R.id.input_password);
@@ -72,26 +96,37 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    public boolean traerUsuario (){
+    public String traerUsuario (){
+        // TODO: VALIDAR EL TIPO DE USUARIO AL CARGAR LA ACTIVITY (eds o tienda)
+        //
+        String tipoTienda = "";
         try {
-            databaseAccess.open();
-            String id_user = databaseAccess.getUsers().get(0).getId_user();
-            String name_user = databaseAccess.getUsers().get(0).getName_user();
-            String id_tienda = databaseAccess.getUsers().get(0).getId_tienda();
-            String nombre_tienda = databaseAccess.getUsers().get(0).getNombre_tienda();
-            String direccion_tienda = databaseAccess.getUsers().get(0).getDireccion_tienda();
-            String telefono_tienda = databaseAccess.getUsers().get(0).getTelefono_tienda();
-            String tipo_tienda = databaseAccess.getUsers().get(0).getTipo_tienda();
-            String marca_tienda = databaseAccess.getUsers().get(0).getMarca_tienda();
-            String logo_tienda= databaseAccess.getUsers().get(0).getLogo_tienda();
-            usuarioLogueado = new User(id_user,name_user,id_tienda,nombre_tienda,direccion_tienda,telefono_tienda,tipo_tienda,marca_tienda,logo_tienda);
 
-            return true;
+            databaseAccess.open();
+            if (databaseAccess.getUsers().size() != 0) {
+                String id_user = databaseAccess.getUsers().get(0).getId_user();
+                String name_user = databaseAccess.getUsers().get(0).getName_user();
+                String id_tienda = databaseAccess.getUsers().get(0).getId_tienda();
+                String nombre_tienda = databaseAccess.getUsers().get(0).getNombre_tienda();
+                String direccion_tienda = databaseAccess.getUsers().get(0).getDireccion_tienda();
+                String telefono_tienda = databaseAccess.getUsers().get(0).getTelefono_tienda();
+                String tipo_tienda = databaseAccess.getUsers().get(0).getTipo_tienda();
+                //Log.d(TAG, "traerUsuario: " + tipo_tienda);
+                tipoTienda = tipo_tienda;
+                String marca_tienda = databaseAccess.getUsers().get(0).getMarca_tienda();
+                String logo_tienda = databaseAccess.getUsers().get(0).getLogo_tienda();
+                usuarioLogueado = new User(id_user, name_user, id_tienda, nombre_tienda, direccion_tienda, telefono_tienda, tipo_tienda, marca_tienda, logo_tienda);
+            }else {
+                tipoTienda = "SINTIENDA";
+            }
+
+                databaseAccess.close();
+            return tipoTienda;
         }catch (Exception e){
             Log.e("ERROR","Error trayendo usuario de sqlite"  + e.getMessage());
         }
 
-        return false;
+        return tipoTienda;
     }
 
 
@@ -180,7 +215,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void loguearUsuarioApp(User loguearUsuario, List<Empleado> list_empleado) {
         // // TODO: 09/08/2017 AGREGAR USUARIO A SQLITE
-        //Log.e("USERAPPRETROFIT", loguearUsuario.toString());
         try {
             databaseAccess.open();
             databaseAccess.addUser(loguearUsuario);
@@ -191,14 +225,15 @@ public class LoginActivity extends AppCompatActivity {
                 cargarUsuarioActivity();
             }else {
 
+
                 for (Empleado emp : list_empleado ) {
-                    Employee employee =  new Employee(emp.getCedula(),emp.getNombre_empleado(),emp.getApellido_empleado());
+                    Employee employee =  new Employee(emp.getCedula(),emp.getNombre_empleado(),emp.getApellido_empleado(),0);
                     databaseAccess.open();
                     databaseAccess.addEmployee(employee);
                     databaseAccess.close();
                 }
                 //cargarListaUsuarios
-                Log.w("logueo","CARGAR LISTA DE USUARIOS");
+                cargarListaEmpleadosActivity();
 
             }
             databaseAccess.close();
@@ -207,6 +242,14 @@ public class LoginActivity extends AppCompatActivity {
             Log.e("ERROR","Error al agregar en sqlite" +e.getMessage());
             onLoginFailed();
         }
+
+    }
+
+    private void cargarListaEmpleadosActivity() {
+
+        Intent intent = new Intent(getApplicationContext(),LoginEmpleadosActivity.class);
+        startActivity(intent);
+        finish();
 
     }
 

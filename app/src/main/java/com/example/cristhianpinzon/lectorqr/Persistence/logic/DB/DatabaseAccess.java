@@ -78,11 +78,55 @@ public class DatabaseAccess {
             String ced = cursor.getString(0);
             String nom = cursor.getString(1);
             String ape = cursor.getString(2);
-            list.add(new Employee(ced,nom,ape));
+            int log = cursor.getInt(3);
+            list.add(new Employee(ced,nom,ape,log));
             cursor.moveToNext();
         }
         cursor.close();
         return list;
+    }
+
+    public Employee getEmployee(String cedula){
+        String[] params = new String[]{cedula};
+        Cursor cursor = database.rawQuery("SELECT * FROM empleado WHERE cedula = ?",params);
+        if (cursor.moveToFirst()){
+            String ced = cursor.getString(0);
+            String nom = cursor.getString(1);
+            String ape = cursor.getString(2);
+            int log = cursor.getInt(3);
+            Employee emp = new Employee(ced,nom,ape,log);
+            return emp;
+        }
+        cursor.close();
+        return  null;
+    }
+
+    public Employee getEmployeeLogueado(){
+        Cursor cursor = database.rawQuery("SELECT * FROM empleado WHERE logueado = 1",null);
+        if (cursor.moveToFirst()){
+            String ced = cursor.getString(0);
+            String nom = cursor.getString(1);
+            String ape = cursor.getString(2);
+            int log = cursor.getInt(3);
+            Employee emp = new Employee(ced,nom,ape,log);
+            return emp;
+        }
+        cursor.close();
+        return  null;
+    }
+
+    public void cerrarSesionEmployees(){
+        String updateQuery ="UPDATE empleado SET logueado = 0";
+        Cursor cursor = database.rawQuery(updateQuery,null);
+        cursor.moveToFirst();
+        cursor.close();
+    }
+
+    public void loguearEmployee(String cedula){
+        String updateQuery ="UPDATE empleado SET logueado = 1 WHERE cedula = " + cedula;
+        Cursor cursor = database.rawQuery(updateQuery,null);
+        cursor.moveToFirst();
+        cursor.close();
     }
 
     public void deleteUser (){
@@ -120,6 +164,7 @@ public class DatabaseAccess {
             values.put("cedula",employee.getCedula());
             values.put("nombre_empleado",employee.getNombre_empleado());
             values.put("apellido_empleado",employee.getApellido_empleado());
+            values.put("logueado",employee.getLogueado());
             database.insert("empleado",null,values);
             database.close();
         }else {

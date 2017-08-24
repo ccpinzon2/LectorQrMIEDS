@@ -8,11 +8,21 @@ public class Employee {
     private String cedula;
     private String nombre_empleado;
     private String apellido_empleado;
+    private int    logueado;
 
-    public Employee(String cedula, String nombre_empleado, String apellido_empleado) {
+    public Employee(String cedula, String nombre_empleado, String apellido_empleado, int logueado) {
         this.cedula = cedula;
         this.nombre_empleado = nombre_empleado;
         this.apellido_empleado = apellido_empleado;
+        this.logueado = logueado;
+    }
+
+    public int getLogueado() {
+        return logueado;
+    }
+
+    public void setLogueado(int logueado) {
+        this.logueado = logueado;
     }
 
     public String getCedula() {
@@ -45,6 +55,7 @@ public class Employee {
                 "cedula='" + cedula + '\'' +
                 ", nombre_empleado='" + nombre_empleado + '\'' +
                 ", apellido_empleado='" + apellido_empleado + '\'' +
+                ", logueado=" + logueado +
                 '}';
     }
 }

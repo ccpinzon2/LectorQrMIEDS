@@ -80,6 +80,7 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
     private void cerrarSesion() {
         databaseAccess.open();
         databaseAccess.deleteUser();
+        databaseAccess.cerrarSesionEmployees();
         databaseAccess.close();
         cargarLoginPrincipal();
         finish();
