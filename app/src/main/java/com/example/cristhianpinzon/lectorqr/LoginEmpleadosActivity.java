@@ -104,6 +104,7 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
             Intent intent = new Intent(getApplicationContext(),EmpleadoActivity.class);
             //intent.putExtra("ced",ced);
             startActivity(intent);
+            finish();
         }else {
 
             Toast.makeText(this, "Sesion Incorrecta", Toast.LENGTH_SHORT).show();

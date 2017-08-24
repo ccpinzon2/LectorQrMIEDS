@@ -1,17 +1,31 @@
 package com.example.cristhianpinzon.lectorqr;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
+import com.google.zxing.Result;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.single.PermissionListener;
 
-public class EmpleadoActivity extends AppCompatActivity {
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
+
+public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
     private String cedLogueado;
     private static final String TAG = "EmpleadoActivityClass";
     private TextView _txtNombreEds;
@@ -21,6 +35,8 @@ public class EmpleadoActivity extends AppCompatActivity {
     private TextView _txtMarcaTiendaEmp;
     private TextView _txtDireccionTiendaEmp;
     private Button _btnCerrarSesionEmp;
+
+    private ZXingScannerView mScannerView;
 
     private DatabaseAccess databaseAccess;
     private User user;
@@ -87,5 +103,75 @@ public class EmpleadoActivity extends AppCompatActivity {
         databaseAccess.open();
         cedLogueado = databaseAccess.getEmployeeLogueado().getCedula();
         databaseAccess.close();
+    }
+
+    @Override
+    public void handleResult(Result result) {
+        cambiarPuntaje(result.getText());
+    }
+
+    private void cambiarPuntaje(String iduser) {
+        Log.e("Resultado - > ", iduser); // Prints scan results<br />
+        Intent intent = new Intent(getApplicationContext(),PuntajeActivity.class);
+        intent.putExtra("iduser",iduser);
+        startActivity(intent);
+    }
+
+
+    private void permission_request(){
+        Dexter.withActivity(this)
+                .withPermission(Manifest.permission.CAMERA)
+                .withListener(permissionListener())
+                .withErrorListener(errorListener())
+                .check();
+    }
+
+    private PermissionListener permissionListener(){
+        return new PermissionListener() {
+            @Override
+            public void onPermissionGranted(PermissionGrantedResponse response) {
+                Toast.makeText(EmpleadoActivity.this, "Permisos obtenidos", Toast.LENGTH_SHORT).show();
+                mScannerView = new ZXingScannerView(EmpleadoActivity.this);   // Programmatically initialize the scanner view
+                setContentView(mScannerView);
+                mScannerView.setResultHandler(EmpleadoActivity.this); // Register ourselves as a handler for scan results.
+                mScannerView.startCamera();         // Start camera
+            }
+
+            @Override
+            public void onPermissionDenied(PermissionDeniedResponse response) {
+                Toast.makeText(EmpleadoActivity.this, "Permisos negados", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                token.continuePermissionRequest();
+            }
+        };
+    }
+
+    private PermissionRequestErrorListener errorListener(){
+        return new PermissionRequestErrorListener() {
+            @Override
+            public void onError(DexterError error) {
+                Toast.makeText(EmpleadoActivity.this, "Ocurrio un error en la peticion de permisos", Toast.LENGTH_SHORT).show();
+            }
+        };
+    }
+
+    public void QrScanner(View view){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+            permission_request();
+        }else {
+            mScannerView = new ZXingScannerView(this);   // Programmatically initialize the scanner view
+            setContentView(mScannerView);
+            mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
+            mScannerView.startCamera();         // Start camera
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //mScannerView.stopCamera();
     }
 }

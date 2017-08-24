@@ -62,12 +62,14 @@ public class LoginActivity extends AppCompatActivity {
                 cargarListaEmpleadosActivity();
             }
             databaseAccess.close();
+            finish();
 
         }else if (traerUsuario().equals("SINTIENDA")){
             //cargarEmpleadoAcitivy();
 
         }else {
             cargarUsuarioActivity();
+            finish();
         }
     }
 
