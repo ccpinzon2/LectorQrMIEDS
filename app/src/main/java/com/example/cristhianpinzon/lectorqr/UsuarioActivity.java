@@ -90,7 +90,7 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
     private void loadData() {
         databaseAccess.open();
         user = databaseAccess.getUsers().get(0);
-        Log.e(TAG,user.toString());
+        Log.e(TAG,user.toString(    ));
         _txtNombreTipo.setText(user.getTipo_tienda() + " - " + user.getNombre_tienda());
         _txtIdTienda.setText(user.getId_tienda());
         _txtDireccion.setText(user.getDireccion_tienda());
@@ -106,7 +106,7 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
 
     private void cambiarPuntaje(String iduser) {
         Log.e("Resultado - > ", iduser); // Prints scan results<br />
-        Intent intent = new Intent(getApplicationContext(),PuntajeActivity.class);
+        Intent intent = new Intent(getApplicationContext(),RedAcmPtsActivity.class);
         intent.putExtra("iduser",iduser);
         startActivity(intent);
     }

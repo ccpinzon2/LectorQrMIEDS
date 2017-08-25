@@ -112,7 +112,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
 
     private void cambiarPuntaje(String iduser) {
         Log.e("Resultado - > ", iduser); // Prints scan results<br />
-        Intent intent = new Intent(getApplicationContext(),PuntajeActivity.class);
+        Intent intent = new Intent(getApplicationContext(),RedAcmPtsActivity.class);
         intent.putExtra("iduser",iduser);
         startActivity(intent);
     }
