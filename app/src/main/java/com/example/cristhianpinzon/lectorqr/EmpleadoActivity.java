@@ -2,6 +2,7 @@ package com.example.cristhianpinzon.lectorqr;
 
 import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.widget.Toast;
 
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -36,6 +39,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
     private TextView _txtDireccionTiendaEmp;
     private Button _btnCerrarSesionEmp;
 
+
     private ZXingScannerView mScannerView;
 
     private DatabaseAccess databaseAccess;
@@ -45,11 +49,14 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(this);
         setContentView(R.layout.activity_empleado);
         databaseAccess = new DatabaseAccess(this);
         traerEmpleado();
+
         beginComponents();
         cargarDatos();
+
         Log.w(TAG, "Empleado cedula,"  + cedLogueado);
 
     }
@@ -65,6 +72,11 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         _txtTelefonoTiendaEmp.setText(user.getTelefono_tienda());
         _txtMarcaTiendaEmp.setText(user.getMarca_tienda());
         _txtDireccionTiendaEmp.setText(user.getDireccion_tienda());
+        Log.d(TAG, "logoEds: " + user.getLogo_tienda());
+
+        Uri uri  = Uri.parse(user.getLogo_tienda());
+        SimpleDraweeView draweeView =  (SimpleDraweeView) findViewById(R.id.frescoImgEmpleado);
+        draweeView.setImageURI(uri);
         databaseAccess.close();
 
     }
@@ -83,6 +95,8 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
                 cerrarSesionEmpleado();
             }
         });
+
+
 
     }
 

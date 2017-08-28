@@ -2,6 +2,7 @@ package com.example.cristhianpinzon.lectorqr;
 
 import android.Manifest;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -43,6 +46,7 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fresco.initialize(this);
         setContentView(R.layout.activity_usuario);
         databaseAccess = new DatabaseAccess(this);
         beginComponets();
@@ -75,6 +79,7 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
         });
 
 
+
     }
 
     private void cerrarSesion() {
@@ -96,6 +101,11 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
         _txtDireccion.setText(user.getDireccion_tienda());
         _txtTelefono.setText(user.getTelefono_tienda());
         _txtMarca.setText(user.getMarca_tienda());
+
+        Uri uri = Uri.parse(user.getLogo_tienda());
+        SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.frescoImgTienda);
+        draweeView.setImageURI(uri);
+
         databaseAccess.close();
     }
 
