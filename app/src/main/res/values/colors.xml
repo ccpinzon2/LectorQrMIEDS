@@ -5,14 +5,24 @@
     <!--<color name="primary_darker">#343838</color>-->
     <!--<color name="accent">#AFEF4F</color>-->
 
-    <color name="primary">#2196F3</color>
-    <color name="primary_dark">#1976D2</color>
-    <color name="primary_darker">#1976D2</color>
-    <color name="primary_light">#BBDEFB</color>
-    <color name="accent">#536DFE</color>
+    <!--<color name="primary">#2196F3</color>-->
+    <!--<color name="primary_dark">#1976D2</color>-->
+    <!--<color name="primary_darker">#1976D2</color>-->
+    <!--<color name="primary_light">#BBDEFB</color>-->
+    <!--<color name="accent">#536DFE</color>-->
+    <!--<color name="primary_text">#212121</color>-->
+    <!--<color name="secondary_text">#757575</color>-->
+    <!--<color name="icons">#FFFFFF</color>-->
+    <!--<color name="divider">#BDBDBD</color>-->
+
+    <color name="primary">#8BC34A</color>
+    <color name="primary_dark">#689F38</color>
+    <color name="primary_darker">#689F38</color>
+    <color name="primary_light">#DCEDC8</color>
+    <color name="accent">#448AFF</color>
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
-    <color name="icons">#FFFFFF</color>
+    <color name="icons">#212121</color>
     <color name="divider">#BDBDBD</color>
 
     <color name="black">#000000</color>

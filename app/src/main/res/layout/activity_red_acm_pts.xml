@@ -218,11 +218,12 @@
         </RadioGroup>
 
         <EditText
-            android:id="@+id/txt_valorRedimirAcumular"
+            android:id="@+id/edit_valorRedimirAcumular"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
             android:hint="Puntos"
-            android:layout_marginBottom="24dp"/>
+            android:inputType="number" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_RedimirAcumularPts"
@@ -238,7 +239,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text="Salir"/>
+            android:text="Terminar"/>
 
 
     </LinearLayout>

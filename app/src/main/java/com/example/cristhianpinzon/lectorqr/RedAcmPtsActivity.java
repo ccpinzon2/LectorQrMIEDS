@@ -1,17 +1,21 @@
 package com.example.cristhianpinzon.lectorqr;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cristhianpinzon.lectorqr.Logica.RedimirAcumular;
 import com.example.cristhianpinzon.lectorqr.Logica.UserApp;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
+import com.example.cristhianpinzon.lectorqr.Servicios.ServicioRedimirAcumular;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioUserApp;
 
 import java.util.HashMap;
@@ -29,12 +33,12 @@ public class RedAcmPtsActivity extends AppCompatActivity {
     private RadioButton _rbAcumular;
     private RadioButton _rbPtsGlobales;
     private RadioButton _rbPtsFidelizados;
-    private TextView    _txtValorRedimirAcumular;
     private Button      _btnRedimirAcumularPts;
 
     private String iduser;
     private String idTienda;
     private String tipoTienda;
+    private String idRedem;
     private final String TAG = "REDIMIRPUNTOSACTIVITY";
 
     private TextView _txtNombreUsuario;
@@ -45,6 +49,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
     private TextView _txtPtsFidelizacion;
     private TextView _txtTipoVehiculo;
     private Button   _btnSalirRedm;
+    private EditText _EditValor;
     private DatabaseAccess databaseAccess;
 
 
@@ -129,7 +134,9 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         Log.d(TAG,"ID USER -> " + idTienda);
         if (databaseAccess.getUsers().get(0).getTipo_tienda().equals("EDS")){
             tipoTienda = "E";
+            idRedem = databaseAccess.getEmployeeLogueado().getCedula();
         }else {
+            idRedem = databaseAccess.getUsers().get(0).getId_tienda();
             tipoTienda ="T";
         }
         databaseAccess.close();
@@ -143,12 +150,12 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                 if (_rbAcumular.isChecked()){
                     _rbPtsGlobales.setVisibility(View.INVISIBLE);
                     _rbPtsFidelizados.setVisibility(View.INVISIBLE);
-                    _txtValorRedimirAcumular.setHint("Valor en Pesos $");
+                    _EditValor.setHint("Valor en Pesos $");
                     _btnRedimirAcumularPts.setText("Acumular");
                 }else if (_rbRedimir.isChecked()){
                     _rbPtsGlobales.setVisibility(View.VISIBLE);
                     _rbPtsFidelizados.setVisibility(View.VISIBLE);
-                    _txtValorRedimirAcumular.setHint("Puntos");
+                    _EditValor.setHint("Puntos");
                     _btnRedimirAcumularPts.setText("Redimir");
                 }
 
@@ -161,18 +168,103 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                 if (_rbAcumular.isChecked()){
                     _rbPtsGlobales.setVisibility(View.INVISIBLE);
                     _rbPtsFidelizados.setVisibility(View.INVISIBLE);
-                    _txtValorRedimirAcumular.setHint("Valor en Pesos $");
+                    _EditValor.setHint("Valor en Pesos $");
                     _btnRedimirAcumularPts.setText("Acumular");
                 }else if (_rbRedimir.isChecked()){
                     _rbPtsGlobales.setVisibility(View.VISIBLE);
                     _rbPtsFidelizados.setVisibility(View.VISIBLE);
-                    _txtValorRedimirAcumular.setHint("Puntos");
+                    _EditValor.setHint("Puntos");
                     _btnRedimirAcumularPts.setText("Redimir");
                 }
             }
         });
+        
+        _btnRedimirAcumularPts.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int val = Integer.parseInt(_EditValor.getText().toString());
+                int ptsGlobales = Integer.parseInt(_txtPtsGlobales.getText().toString());
+                int ptsFidelizados = Integer.parseInt(_txtPtsFidelizacion.getText().toString());
 
 
+
+                if (val <= ptsGlobales && _rbPtsGlobales.isChecked() ){
+                    redimirAcumular();
+                }else if (val <= ptsFidelizados && _rbPtsFidelizados.isChecked() ){
+                    redimirAcumular();
+                }else if   (_rbAcumular.isChecked()){
+                    redimirAcumular();
+                }else {
+                    Toast.makeText(RedAcmPtsActivity.this, "No puede redimir esa cantidad", Toast.LENGTH_SHORT).show();
+                }
+
+
+
+            }
+
+
+        });
+
+
+
+    }
+
+    private void redimirAcumular() {
+        //id_user,valor,tipo_transaccion(A,R),id_redem (id del empelado o tienda), tipo_establecimiento T- tienda E EDs
+        //fidelizacion -> (P, G)
+
+        String tipo_transaccion = (_rbAcumular.isChecked()) ? "A": "R";
+        String fidelizacion = (_rbPtsFidelizados.isChecked()) ? "P" : "G";
+
+        final ProgressDialog progressDialog = new ProgressDialog(RedAcmPtsActivity.this,R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Enviando");
+        progressDialog.show();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(getResources().getString(R.string.url_server))
+                .build();
+
+        ServicioRedimirAcumular servicioRedimirAcumular = retrofit.create(ServicioRedimirAcumular.class);
+//id_user=8001&valor=15&tipo_transaccion=A&id_redem=15001&tipo_establecimiento=T&fidelizacion=G
+        Map<String,String> datos = new HashMap<>();
+        datos.put("id_user",iduser);
+        datos.put("valor",_EditValor.getText().toString());
+        datos.put("tipo_transaccion",tipo_transaccion);
+        datos.put("id_redem",idRedem);
+        datos.put("tipo_establecimiento",tipoTienda);
+        datos.put("fidelizacion",fidelizacion);
+
+//        for (Map.Entry entr : datos.entrySet()){
+//            Log.w(TAG, "redimirAcumular: " + entr.getKey() + ", " + entr.getValue() );
+//        }
+//
+        Call<RedimirAcumular> call = servicioRedimirAcumular.traerResultado(datos);
+        call.enqueue(new Callback<RedimirAcumular>() {
+            @Override
+            public void onResponse(Call<RedimirAcumular> call, Response<RedimirAcumular> response) {
+                Log.d(TAG, "RETROFITACUMULAR: " + response.body().getResultado().toString());
+                if (response.body().equals("FALSE")){
+                    Toast.makeText(RedAcmPtsActivity.this, "No se pudo realizar la operacion", Toast.LENGTH_SHORT).show();
+                }else {
+                    progressDialog.dismiss();
+                    finish();
+                    Intent intent = new Intent(getApplicationContext(), RedAcmPtsActivity.class);
+                    intent.putExtra("iduser",iduser);
+                    startActivity(intent);
+                }
+
+                // TODO: 25/08/2017 VALIDACION DE DATOS AL REDIMIR O CUMULAR QUE NO SE PASE
+            }
+
+            @Override
+            public void onFailure(Call<RedimirAcumular> call, Throwable t) {
+                progressDialog.dismiss();
+                finish();
+
+            }
+        });
 
     }
 
@@ -182,10 +274,18 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         _rbPtsGlobales = (RadioButton) findViewById(R.id.radio_globales);
         _rbPtsFidelizados = (RadioButton) findViewById(R.id.radio_Fidelizados);
 
-        _txtValorRedimirAcumular = (TextView) findViewById(R.id.txt_valorRedimirAcumular);
+        //_txtValorRedimirAcumular = (TextView) findViewById(R.id.txt_valorRedimirAcumular);
 
         _btnRedimirAcumularPts = (Button) findViewById(R.id.btn_RedimirAcumularPts);
         _btnSalirRedm = (Button) findViewById(R.id.btn_SalirRedm);
+        _btnSalirRedm.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                //Intent intent = new Intent(getApplicationContext(),EmpleadoAc)
+            }
+        });
+        _EditValor = (EditText) findViewById(R.id.edit_valorRedimirAcumular);
         _txtNombreUsuario = (TextView) findViewById(R.id.txtNombreUsuarioAppRed);
         _txtEmailUser = (TextView) findViewById(R.id.txtEmailUserAppRed);
         _txtIdUser = (TextView) findViewById(R.id.txtIdUserAppRed);
@@ -193,5 +293,23 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         _txtPtsGlobales = (TextView) findViewById(R.id.txtPtsGlobalesUserAppRed);
         _txtPtsFidelizacion = (TextView) findViewById(R.id.txtPtsFidelizacionUserAppRed);
         _txtTipoVehiculo = (TextView) findViewById(R.id.txtTipoVehiculoUserAppRed);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        Intent intent;
+        if (tipoTienda.equals("EDS")){
+            intent = new Intent(getApplicationContext(), EmpleadoActivity.class);
+            intent.putExtra("iduser",iduser);
+        }else {
+            intent = new Intent(getApplicationContext(), UsuarioActivity.class);
+            intent.putExtra("iduser",iduser);
+        }
+
+
+        startActivity(intent);
+
     }
 }
