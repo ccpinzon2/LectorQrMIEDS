@@ -116,7 +116,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:text="Puntos Globales"/>
+                    android:text="Puntos Regalo"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -206,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="16dp"
                 android:checked="true"
-                android:text="Puntos Globales" />
+                android:text="Puntos Regalo" />
 
             <RadioButton
                 android:id="@+id/radio_Fidelizados"

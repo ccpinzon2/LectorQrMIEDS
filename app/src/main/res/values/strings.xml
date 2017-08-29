@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">LectorQR</string>
+    <string name="app_name">Puntos MiEDS</string>
     <string name="url_server">http://mieds.com/webserver_dev/</string>
 </resources>

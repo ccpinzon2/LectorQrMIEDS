@@ -119,6 +119,7 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
         Intent intent = new Intent(getApplicationContext(),RedAcmPtsActivity.class);
         intent.putExtra("iduser",iduser);
         startActivity(intent);
+        finish();
     }
 
     private void permission_request(){

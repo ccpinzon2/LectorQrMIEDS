@@ -18,7 +18,7 @@
         android:weightSum="1">
 
 
-        <ImageView android:src="@drawable/ic_user"
+        <ImageView android:src="@drawable/principalmieds"
             android:layout_width="wrap_content"
             android:layout_height="130dp"
             android:layout_marginBottom="24dp"

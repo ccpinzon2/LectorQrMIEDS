@@ -129,6 +129,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         Intent intent = new Intent(getApplicationContext(),RedAcmPtsActivity.class);
         intent.putExtra("iduser",iduser);
         startActivity(intent);
+        finish();
     }
 
 

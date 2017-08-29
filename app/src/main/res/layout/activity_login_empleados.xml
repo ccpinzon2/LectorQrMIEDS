@@ -16,7 +16,7 @@
         android:paddingRight="24dp"
         android:weightSum="1">
 
-        <ImageView android:src="@drawable/ic_user"
+        <ImageView android:src="@drawable/fedispetrollogo"
             android:layout_width="wrap_content"
             android:layout_height="130dp"
             android:layout_marginBottom="24dp"
@@ -27,7 +27,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Iniciar Sesion Empleado"
+        android:text="Sesion Funcionario"
         android:textSize="23sp"
         android:paddingBottom="40dp"/>
 
