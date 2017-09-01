@@ -115,9 +115,11 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
     }
 
     private void cambiarPuntaje(String iduser) {
-        Log.e("Resultado - > ", iduser); // Prints scan results<br />
+         // Prints scan results<br />
+        String parts[] = iduser.split("/");
         Intent intent = new Intent(getApplicationContext(),RedAcmPtsActivity.class);
-        intent.putExtra("iduser",iduser);
+        Log.e("Resultado - > ", parts[1]);
+        intent.putExtra("iduser",parts[1]);
         startActivity(intent);
         finish();
     }

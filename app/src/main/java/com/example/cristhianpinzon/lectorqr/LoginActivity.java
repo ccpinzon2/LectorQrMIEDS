@@ -224,6 +224,15 @@ public class LoginActivity extends AppCompatActivity {
             if (list_empleado == null){
                 Log.w("logueo","Lista Nula");
                 // entra direcatamente a escanear QR
+                if (loguearUsuario.getTipo_tienda().equals("EDS")){
+                    Toast.makeText(this, "La EDS no tiene empleados, por favor ingresarlos en el sistema", Toast.LENGTH_SHORT).show();
+                    databaseAccess.deleteUser();
+                    databaseAccess.cerrarSesionEmployees();
+                    finish();
+
+                    Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+                    startActivity(intent);
+                }
                 cargarUsuarioActivity();
             }else {
 

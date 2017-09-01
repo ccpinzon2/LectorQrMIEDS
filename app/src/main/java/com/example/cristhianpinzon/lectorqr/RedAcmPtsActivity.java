@@ -61,8 +61,19 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_red_acm_pts);
         databaseAccess = new DatabaseAccess(this);
         beginComponents();
-        traerDatos();
-        traerDatosUserApp();
+        try {
+            traerDatos();
+            traerDatosUserApp();
+        }catch (Exception e){
+            Log.e(TAG, "onCreate: Error trayendo datos al leer el qr" + e.getMessage());
+            databaseAccess.deleteUser();
+            databaseAccess.cerrarSesionEmployees();
+            finish();
+            Toast.makeText(this, "La EDS no tiene empleados, por favor ingresarlos en el sistema", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
+            startActivity(intent);
+        }
+
         accionesBotones();
 
     }
