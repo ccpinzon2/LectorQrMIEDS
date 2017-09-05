@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Puntos MiEDS</string>
-    <string name="url_server">http://mieds.com/webserver_dev/</string>
+    <string name="url_server">http://mieds.com/webserverv5/</string>
 </resources>

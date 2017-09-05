@@ -117,13 +117,24 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
 
     private void cambiarPuntaje(String iduser) {
          // Prints scan results<br />
-        String parts[] = iduser.split("/");
-        Intent intent = new Intent(getApplicationContext(),RedAcmPtsActivity.class);
-        Log.e("Resultado - > ", parts[1]);
-        intent.putExtra("iduser",parts[1]);
-        startActivity(intent);
-        mScannerView.stopCamera();
-        finish();
+        try {
+            String parts[] = iduser.split("/");
+            Intent intent = new Intent(getApplicationContext(),RedAcmPtsActivity.class);
+            Log.e("Resultado - > ", parts[1]);
+            intent.putExtra("iduser",parts[1]);
+            startActivity(intent);
+            mScannerView.stopCamera();
+            finish();
+        }catch (Exception e){
+            Log.e(TAG, "cambiarPuntaje: error leerqr ->  " + e.getMessage() );
+            Toast.makeText(this, "Qr Incorrecto", Toast.LENGTH_SHORT).show();
+            mScannerView.stopCamera();
+            finish();
+            Intent intent = new Intent(getApplicationContext(),UsuarioActivity.class);
+            startActivity(intent);
+
+        }
+
     }
 
     private void permission_request(){
@@ -180,6 +191,6 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
     @Override
     protected void onPause() {
         super.onPause();
-        mScannerView.stopCamera();
+//        mScannerView.stopCamera();
     }
 }

@@ -2,6 +2,8 @@ package com.example.cristhianpinzon.lectorqr;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -163,11 +165,13 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                     _rbPtsGlobales.setVisibility(View.INVISIBLE);
                     _rbPtsFidelizados.setVisibility(View.INVISIBLE);
                     _EditValor.setHint("Valor en Pesos $");
+                    _EditValor.setText("");
                     _btnRedimirAcumularPts.setText("Acumular");
                 }else if (_rbRedimir.isChecked()){
                     _rbPtsGlobales.setVisibility(View.VISIBLE);
                     _rbPtsFidelizados.setVisibility(View.VISIBLE);
                     _EditValor.setHint("Puntos");
+                    _EditValor.setText("");
                     _btnRedimirAcumularPts.setText("Redimir");
                 }
 
@@ -194,23 +198,28 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         _btnRedimirAcumularPts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int val = Integer.parseInt(_EditValor.getText().toString());
-                int ptsGlobales = Integer.parseInt(_txtPtsGlobales.getText().toString());
-                int ptsFidelizados = Integer.parseInt(_txtPtsFidelizacion.getText().toString());
 
 
+                if (_EditValor.getText().toString().isEmpty() || _EditValor.getText().length() > 7 ){
+                    _EditValor.setError("Dato invalido");
 
-                if (val <= ptsGlobales && _rbPtsGlobales.isChecked() ){
-                    redimirAcumular();
-                }else if (val <= ptsFidelizados && _rbPtsFidelizados.isChecked() ){
-                    redimirAcumular();
-                }else if   (_rbAcumular.isChecked()){
-                    redimirAcumular();
                 }else {
-                    Toast.makeText(RedAcmPtsActivity.this, "No puede redimir esa cantidad", Toast.LENGTH_SHORT).show();
+                    int val = Integer.parseInt(_EditValor.getText().toString());
+
+                    int ptsGlobales = Integer.parseInt(_txtPtsGlobales.getText().toString());
+                    int ptsFidelizados = Integer.parseInt(_txtPtsFidelizacion.getText().toString());
+
+                    if (val <= ptsGlobales && _rbPtsGlobales.isChecked()) {
+                        redimirAcumular();
+                    } else if (val <= ptsFidelizados && _rbPtsFidelizados.isChecked()) {
+                        redimirAcumular();
+                    } else if (_rbAcumular.isChecked()) {
+                        redimirAcumular();
+                    } else {
+                        Toast.makeText(RedAcmPtsActivity.this, "No puede redimir esa cantidad", Toast.LENGTH_SHORT).show();
+                    }
+
                 }
-
-
 
             }
 
@@ -261,7 +270,9 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                     Toast.makeText(RedAcmPtsActivity.this, "No se pudo realizar la operacion", Toast.LENGTH_SHORT).show();
                 }else {
                     progressDialog.dismiss();
-                    Toast.makeText(RedAcmPtsActivity.this, "Transaccion Realizada", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(RedAcmPtsActivity.this, "Transaccion Realizada", Toast.LENGTH_SHORT).show();
+                    traerDatosTransaccionFinalizada();
+
                     finish();
                     cargarActivityAnterior();
                 }
@@ -279,16 +290,80 @@ public class RedAcmPtsActivity extends AppCompatActivity {
 
     }
 
+    private void traerDatosTransaccionFinalizada() {
+
+
+
+        final ProgressDialog progressDialog = new ProgressDialog(RedAcmPtsActivity.this,R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Realizando Transaccion ..");
+        progressDialog.show();
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(getResources().getString(R.string.url_server))
+                .build();
+
+        ServicioUserApp servicioUserApp = retrofit.create(ServicioUserApp.class);
+
+        Map<String,String> datos = new HashMap<>();
+        datos.put("id_user",iduser);
+        datos.put("id_establecimiento",idTienda);
+        datos.put("tipo",tipoTienda);
+
+        Call<UserApp> call = servicioUserApp.traerUserApp(datos);
+
+        call.enqueue(new Callback<UserApp>() {
+            @Override
+            public void onResponse(Call<UserApp> call, Response<UserApp> response) {
+
+
+                int toastDurationInMilliSeconds = 6000;
+                final Toast mToastToShow;
+                mToastToShow = Toast.makeText(getApplication(),
+                        "Transaccion Realizada para el usuario: "
+                        + response.body().getNombre()
+                        + "\n Nuevos puntos regalo : "
+                        + response.body().getPtos_globales()
+                        + "\n Nuevos Puntos Fidelizados : "
+                        + response.body().getPtos_fidelizados(), Toast.LENGTH_LONG);
+                CountDownTimer toastCountDown;
+                toastCountDown = new CountDownTimer(toastDurationInMilliSeconds, 1000 /*Tick duration*/) {
+                    public void onTick(long millisUntilFinished) {
+                        mToastToShow.show();
+                    }
+                    public void onFinish() {
+                        mToastToShow.cancel();
+                    }
+                };
+
+                // Show the toast and starts the countdown
+                mToastToShow.show();
+                toastCountDown.start();
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<UserApp> call, Throwable t) {
+                Log.e("Error cargando datos",t.getMessage());
+                Toast.makeText(RedAcmPtsActivity.this, "Error, Revise Su conexion ", Toast.LENGTH_SHORT).show();
+                finish();
+                progressDialog.dismiss();
+            }
+        });
+
+    }
+
     private void cargarActivityAnterior() {
         databaseAccess.open();
         String tipoTienda = databaseAccess.getUsers().get(0).getTipo_tienda();
 
         this.finish();
         if (tipoTienda.equals("EDS")){
-            Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
+            Intent intent = new Intent(getApplicationContext(), EmpleadoActivity.class);
             startActivity(intent);
         }else {
-            Intent intent = new Intent(getApplicationContext(),EmpleadoActivity.class);
+            Intent intent = new Intent(getApplicationContext(),UsuarioActivity.class);
             startActivity(intent);
         }
         databaseAccess.close();

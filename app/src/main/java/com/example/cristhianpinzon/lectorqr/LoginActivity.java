@@ -174,7 +174,6 @@ public class LoginActivity extends AppCompatActivity {
                     if (response.body().getName_user().equals("FALSE") || response.body().getId_user() == null){
                         onLoginFailed();
                     }else {
-                        //Toast.makeText(LoginActivity.this, "Inicio Sesion", Toast.LENGTH_SHORT).show();
                         User loguearUsuario = new User(
                                 response.body().getId_user(),
                                 response.body().getName_user(),
@@ -187,15 +186,7 @@ public class LoginActivity extends AppCompatActivity {
                                 response.body().getTienda().getLogo_image()
                         );
 
-
-
                         loguearUsuarioApp(loguearUsuario ,  response.body().getTienda().getList_empleado());
-//                        Log.w("Login","id-> " + response.body().getId_user());
-//                        Log.w("Login","name-> " + response.body().getName_user());
-//                        Log.w("Login","tiendanombre-> " + response.body().getTienda().getNombre());
-//                        Log.w("Login","tiendaid-> " + response.body().getTienda().getId());
-//                        Log.w("Login","tipo tienda -> " + response.body().getTienda().getTipo());
-//                        Log.w("Login","empleados -> " + response.body().getTienda().getList_empleado().get(0).getNombre_empleado());
 
                     }
                 }catch (Exception e){
