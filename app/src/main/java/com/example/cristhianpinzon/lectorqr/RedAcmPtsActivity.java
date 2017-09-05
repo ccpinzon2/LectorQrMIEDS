@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.example.cristhianpinzon.lectorqr.Logica.RedimirAcumular;
 import com.example.cristhianpinzon.lectorqr.Logica.UserApp;
+import com.example.cristhianpinzon.lectorqr.Logica.Usuario;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioRedimirAcumular;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioUserApp;
@@ -260,10 +261,9 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                     Toast.makeText(RedAcmPtsActivity.this, "No se pudo realizar la operacion", Toast.LENGTH_SHORT).show();
                 }else {
                     progressDialog.dismiss();
+                    Toast.makeText(RedAcmPtsActivity.this, "Transaccion Realizada", Toast.LENGTH_SHORT).show();
                     finish();
-                    Intent intent = new Intent(getApplicationContext(), RedAcmPtsActivity.class);
-                    intent.putExtra("iduser",iduser);
-                    startActivity(intent);
+                    cargarActivityAnterior();
                 }
 
                 // TODO: 25/08/2017 VALIDACION DE DATOS AL REDIMIR O CUMULAR QUE NO SE PASE
@@ -277,6 +277,21 @@ public class RedAcmPtsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void cargarActivityAnterior() {
+        databaseAccess.open();
+        String tipoTienda = databaseAccess.getUsers().get(0).getTipo_tienda();
+
+        this.finish();
+        if (tipoTienda.equals("EDS")){
+            Intent intent = new Intent(getApplicationContext(), UsuarioActivity.class);
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(getApplicationContext(),EmpleadoActivity.class);
+            startActivity(intent);
+        }
+        databaseAccess.close();
     }
 
     private void beginComponents() {
