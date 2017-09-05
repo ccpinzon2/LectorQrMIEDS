@@ -34,8 +34,22 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_empleados);
         databaseAccess =  new DatabaseAccess(this);
-        cargarEmployees();
-        beginComponents();
+        databaseAccess.open();
+        if (!databaseAccess.getEmployees().isEmpty()){
+
+            cargarEmployees();
+            beginComponents();
+
+        }else {
+            databaseAccess.deleteUser();
+            databaseAccess.cerrarSesionEmployees();
+            databaseAccess.close();
+            cargarLoginPrincipal();
+            finish();
+
+        }
+
+
     }
 
     private void cargarEmployees() {

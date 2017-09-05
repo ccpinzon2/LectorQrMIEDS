@@ -121,15 +121,21 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
 
     @Override
     public void handleResult(Result result) {
+        Log.w(TAG, "handleResult: " + result.getText() );
         cambiarPuntaje(result.getText());
+        mScannerView.stopCamera();
+        mScannerView.destroyDrawingCache();
     }
 
     private void cambiarPuntaje(String iduser) {
-        Log.e("Resultado - > ", iduser); // Prints scan results<br />
+        String parts[] = iduser.split("/");
         Intent intent = new Intent(getApplicationContext(),RedAcmPtsActivity.class);
-        intent.putExtra("iduser",iduser);
+        Log.e("Resultado - > ", parts[1]);
+        intent.putExtra("iduser",parts[1]);
         startActivity(intent);
+        mScannerView.stopCamera();
         finish();
+
     }
 
 
@@ -187,6 +193,6 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
     @Override
     protected void onPause() {
         super.onPause();
-        //mScannerView.stopCamera();
+        mScannerView.stopCamera();
     }
 }

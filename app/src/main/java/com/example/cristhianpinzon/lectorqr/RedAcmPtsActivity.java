@@ -53,8 +53,8 @@ public class RedAcmPtsActivity extends AppCompatActivity {
     private EditText _EditValor;
     private DatabaseAccess databaseAccess;
 
-
-
+ //// TODO: 04/09/2017 VALIDAR QUE EL CAMPO NO ESTE VACIO AL REDIMIR/ACUMULAR Y PONER EN BLANCO AL CMABIAR DE RADIO BUTTON 
+// TODO: 04/09/2017 EVITAR ERRORERS AL LEER QR INVALIDO 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

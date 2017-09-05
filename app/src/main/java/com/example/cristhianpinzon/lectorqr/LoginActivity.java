@@ -219,7 +219,7 @@ public class LoginActivity extends AppCompatActivity {
         // // TODO: 09/08/2017 AGREGAR USUARIO A SQLITE
         try {
             databaseAccess.open();
-
+            databaseAccess.addUser(loguearUsuario);
             if (list_empleado == null){
                 Log.w("logueo","Lista Nula");
                 // entra direcatamente a escanear QR
@@ -235,7 +235,7 @@ public class LoginActivity extends AppCompatActivity {
                 cargarUsuarioActivity();
             }else {
 
-                databaseAccess.addUser(loguearUsuario);
+
 
 
                 for (Empleado emp : list_empleado ) {

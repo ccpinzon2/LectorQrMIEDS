@@ -111,6 +111,7 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
 
     @Override
     public void handleResult(Result rawResult) {
+        Log.w(TAG, "handleResult: " + rawResult.getText() );
         cambiarPuntaje(rawResult.getText());
     }
 
@@ -121,6 +122,7 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
         Log.e("Resultado - > ", parts[1]);
         intent.putExtra("iduser",parts[1]);
         startActivity(intent);
+        mScannerView.stopCamera();
         finish();
     }
 
@@ -178,6 +180,6 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
     @Override
     protected void onPause() {
         super.onPause();
-        //mScannerView.stopCamera();
+        mScannerView.stopCamera();
     }
 }
