@@ -11,7 +11,7 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="56dp"
+        android:paddingTop="20dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:weightSum="1">
@@ -24,22 +24,7 @@
             android:text="empleado1"
             android:textSize="25sp"
             android:paddingBottom="20dp"/>
-        <TextView
-            android:layout_gravity="center_horizontal"
-            android:id="@+id/txtNombreEmpleado"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="empleado1"
-            android:textSize="25sp"
-            android:paddingBottom="20dp"/>
 
-
-        <!--<ImageView android:src="@drawable/ic_qrscan"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="130dp"-->
-        <!--android:layout_marginBottom="24dp"-->
-        <!--android:layout_gravity="center_horizontal"-->
-        <!--android:layout_weight="0.58" />-->
 
         <LinearLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -51,10 +36,13 @@
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/frescoImgEmpleado"
-                android:layout_width="130dp"
-                android:layout_height="130dp"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                fresco:viewAspectRatio="1.5"
                 fresco:placeholderImage="@drawable/ic_qrscan"
                 />
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -127,6 +115,42 @@
 
         </LinearLayout>
 
+        <Space
+            android:layout_width="1dp"
+            android:layout_height="10dp"/>
+
+        <TextView
+            android:layout_gravity=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nombre Funcionario: "
+            android:textColor="@color/primary_text"
+            android:textSize="25sp"/>
+        <TextView
+            android:layout_gravity=""
+            android:id="@+id/txtNombreEmpleado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="empleado1"
+            android:textSize="20sp"
+            android:paddingBottom="20dp"/>
+        <TextView
+            android:layout_gravity=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ultima Transaccion: "
+            android:textColor="@color/primary_text"
+            android:textSize="25sp"/>
+        <TextView
+            android:layout_gravity=""
+            android:id="@+id/txtUltimaTransaccion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="20sp"
+            android:paddingBottom="20dp"/>
+
+
 
         <Button
             android:id="@+id/btn_scanEmp"
@@ -146,5 +170,7 @@
             android:text="Cambiar Funcionario"/>
 
     </LinearLayout>
+
+
 
 </ScrollView>

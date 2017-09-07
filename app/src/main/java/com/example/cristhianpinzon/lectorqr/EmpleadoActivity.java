@@ -12,8 +12,10 @@
         import android.widget.TextView;
         import android.widget.Toast;
 
+        import com.example.cristhianpinzon.lectorqr.Logica.Transacciones;
         import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
         import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
+        import com.example.cristhianpinzon.lectorqr.Servicios.ServicioTransaccionesEmpleado;
         import com.facebook.drawee.backends.pipeline.Fresco;
         import com.facebook.drawee.view.SimpleDraweeView;
         import com.google.zxing.Result;
@@ -26,9 +28,18 @@
         import com.karumi.dexter.listener.PermissionRequestErrorListener;
         import com.karumi.dexter.listener.single.PermissionListener;
 
-        import me.dm7.barcodescanner.zxing.ZXingScannerView;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Map;
 
-public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
+        import me.dm7.barcodescanner.zxing.ZXingScannerView;
+        import retrofit2.Call;
+        import retrofit2.Callback;
+        import retrofit2.Response;
+        import retrofit2.Retrofit;
+        import retrofit2.converter.gson.GsonConverterFactory;
+
+        public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
     private String cedLogueado;
     private static final String TAG = "EmpleadoActivityClass";
     private TextView _txtNombreEds;
@@ -37,6 +48,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
     private TextView _txtTelefonoTiendaEmp;
     private TextView _txtMarcaTiendaEmp;
     private TextView _txtDireccionTiendaEmp;
+    private TextView _txtUltimaTransaccion;
     private Button _btnCerrarSesionEmp;
 
 
@@ -67,7 +79,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         Log.e(TAG,user.toString());
         _txtNombreEds.setText(user.getTipo_tienda() + " " + user.getNombre_tienda());
         String nombreEmp = databaseAccess.getEmployee(cedLogueado).getNombre_empleado() + " " + databaseAccess.getEmployee(cedLogueado).getApellido_empleado() ;
-        _txtNombreEmpleadoEds.setText("Funcionario : " + nombreEmp);
+        _txtNombreEmpleadoEds.setText(nombreEmp);
         _txtIdTiendaEmp.setText(user.getId_tienda());
         _txtTelefonoTiendaEmp.setText(user.getTelefono_tienda());
         _txtMarcaTiendaEmp.setText(user.getMarca_tienda());
@@ -88,6 +100,12 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         _txtTelefonoTiendaEmp = (TextView) findViewById(R.id.txtTelefonoTiendaEmp);
         _txtMarcaTiendaEmp = (TextView) findViewById(R.id.txtMarcaTiendaEmp);
         _txtDireccionTiendaEmp = (TextView) findViewById(R.id.txtDireccionTiendaEmp);
+        _txtUltimaTransaccion = (TextView) findViewById(R.id.txtUltimaTransaccion);
+        try {
+            ultimaTransaccion();
+        }catch (Exception e){
+            Log.e(TAG, "beginComponents:  fallo traer ultima transaccion" + e.getMessage() );
+        }
         _btnCerrarSesionEmp = (Button) findViewById(R.id.btn_CerrarSesionEmp);
         _btnCerrarSesionEmp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,6 +116,45 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
 
 
 
+    }
+
+    private void ultimaTransaccion() {
+        databaseAccess.open();
+        //Toast.makeText(this, "cedula-> " + cedLogueado  + "idest-> " +databaseAccess.getUsers().get(0).getId_tienda(), Toast.LENGTH_SHORT).show();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(getResources().getString(R.string.url_server))
+                .build();
+
+        ServicioTransaccionesEmpleado servicioTransacciones = retrofit.create(ServicioTransaccionesEmpleado.class);
+
+        Map<String,String> datos = new HashMap<>();
+        datos.put("op","transacciones");
+        datos.put("idest",databaseAccess.getUsers().get(0).getId_tienda());
+        datos.put("idemp",cedLogueado);
+
+        Call<List<Transacciones>> call = servicioTransacciones.traerTransacciones(datos);
+
+        call.enqueue(new Callback<List<Transacciones>>() {
+            @Override
+            public void onResponse(Call<List<Transacciones>> call, Response<List<Transacciones>> response) {
+                if (!response.body().isEmpty()){
+                    String tipo = (response.body().get(0).getTipo_puntaje().equals('A')) ? "Acumulados":"Redimidos" ;
+                    String userapp = response.body().get(0).getNombre_usuario();
+                    String data = response.body().get(0).getPuntos() + " puntos " + tipo + " al usuario " + userapp;
+                    _txtUltimaTransaccion.setText(data);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Transacciones>> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage() );
+                _txtUltimaTransaccion.setText("Sin Ultima Transaccion");
+            }
+        });
+
+        databaseAccess.close();
     }
 
     private void cerrarSesionEmpleado() {
