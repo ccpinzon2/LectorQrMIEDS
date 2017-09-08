@@ -21,7 +21,7 @@
             android:id="@+id/txtNombreEdsEmpleado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="empleado1"
+            android:text="Cargando..."
             android:textSize="20sp"
             android:paddingBottom="20dp"/>
 
@@ -62,12 +62,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="ID Tienda"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
                     android:text="Telefono"/>
                 <TextView
                     android:layout_width="match_parent"
@@ -84,12 +78,6 @@
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-                <TextView
-                    android:id="@+id/txtIdTiendaEmp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textSize="16sp"
-                    android:text="I4354356"/>
                 <TextView
                     android:id="@+id/txtTelefonoTiendaEmp"
                     android:textSize="16sp"
@@ -146,7 +134,22 @@
             android:id="@+id/txtUltimaTransaccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="Cargando.."
+            android:textSize="15sp"
+            android:paddingBottom="20dp"/>
+        <TextView
+            android:layout_gravity=""
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ultimo Cliente: "
+            android:textColor="@color/primary_text"
+            android:textSize="18sp"/>
+        <TextView
+            android:layout_gravity=""
+            android:id="@+id/txtDatosUltimoCliente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cargando.."
             android:textSize="15sp"
             android:paddingBottom="20dp"/>
 

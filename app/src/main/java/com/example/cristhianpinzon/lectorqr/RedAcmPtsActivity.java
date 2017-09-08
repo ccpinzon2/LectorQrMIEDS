@@ -373,7 +373,9 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         _rbRedimir = (RadioButton) findViewById(R.id.radio_redimir);
         _rbAcumular = (RadioButton) findViewById(R.id.radio_acumular);
         _rbPtsGlobales = (RadioButton) findViewById(R.id.radio_globales);
+        _rbPtsGlobales.setVisibility(View.INVISIBLE);
         _rbPtsFidelizados = (RadioButton) findViewById(R.id.radio_Fidelizados);
+        _rbPtsFidelizados.setVisibility(View.INVISIBLE);
 
         //_txtValorRedimirAcumular = (TextView) findViewById(R.id.txt_valorRedimirAcumular);
 

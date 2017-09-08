@@ -5,6 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true"
+    android:background="@drawable/promocionesfondo"
     tools:context="com.example.cristhianpinzon.lectorqr.RedAcmPtsActivity">
 
     <LinearLayout
@@ -174,20 +175,22 @@
             android:gravity="center"
             android:orientation="horizontal">
 
-            <RadioButton
-                android:id="@+id/radio_redimir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:checked="true"
-                android:text="Redimir" />
+
 
             <RadioButton
                 android:id="@+id/radio_acumular"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="false"
+                android:checked="true"
                 android:text="Acumular" />
+
+            <RadioButton
+                android:id="@+id/radio_redimir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="16dp"
+                android:checked="false"
+                android:text="Redimir" />
 
         </RadioGroup>
 
@@ -222,7 +225,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:hint="Puntos"
+            android:hint="Valor en pesos $"
             android:inputType="number" />
 
         <android.support.v7.widget.AppCompatButton
