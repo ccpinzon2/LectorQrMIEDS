@@ -35,6 +35,7 @@
             android:layout_marginBottom="20dp">
 
             <com.facebook.drawee.view.SimpleDraweeView
+                android:layout_gravity="center_horizontal"
                 android:id="@+id/frescoImgEmpleado"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
