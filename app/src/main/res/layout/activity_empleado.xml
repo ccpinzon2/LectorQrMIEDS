@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="empleado1"
-            android:textSize="25sp"
+            android:textSize="20sp"
             android:paddingBottom="20dp"/>
 
 
@@ -61,23 +61,23 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:text="ID Tienda"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:text="Telefono"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:text="Marca"/>
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:text="Direccion"/>
             </LinearLayout>
             <LinearLayout
@@ -88,17 +88,17 @@
                     android:id="@+id/txtIdTiendaEmp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:text="I4354356"/>
                 <TextView
                     android:id="@+id/txtTelefonoTiendaEmp"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="4356456"/>
                 <TextView
                     android:id="@+id/txtMarcaTiendaEmp"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="ZEUSS"/>
@@ -106,7 +106,7 @@
                 <TextView
                     android:id="@+id/txtDireccionTiendaEmp"
                     android:layout_width="match_parent"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_height="wrap_content"
                     android:text="calle123"/>
             </LinearLayout>
@@ -125,14 +125,14 @@
             android:layout_height="wrap_content"
             android:text="Nombre Funcionario: "
             android:textColor="@color/primary_text"
-            android:textSize="25sp"/>
+            android:textSize="18sp"/>
         <TextView
             android:layout_gravity=""
             android:id="@+id/txtNombreEmpleado"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="empleado1"
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:paddingBottom="20dp"/>
         <TextView
             android:layout_gravity=""
@@ -140,14 +140,14 @@
             android:layout_height="wrap_content"
             android:text="Ultima Transaccion: "
             android:textColor="@color/primary_text"
-            android:textSize="25sp"/>
+            android:textSize="18sp"/>
         <TextView
             android:layout_gravity=""
             android:id="@+id/txtUltimaTransaccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textSize="20sp"
+            android:textSize="15sp"
             android:paddingBottom="20dp"/>
 
 

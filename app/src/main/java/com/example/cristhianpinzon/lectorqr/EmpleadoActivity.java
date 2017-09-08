@@ -77,7 +77,7 @@
         databaseAccess.open();
         user = databaseAccess.getUsers().get(0);
         Log.e(TAG,user.toString());
-        _txtNombreEds.setText(user.getTipo_tienda() + " " + user.getNombre_tienda());
+        _txtNombreEds.setText(user.getNombre_tienda());
         String nombreEmp = databaseAccess.getEmployee(cedLogueado).getNombre_empleado() + " " + databaseAccess.getEmployee(cedLogueado).getApellido_empleado() ;
         _txtNombreEmpleadoEds.setText(nombreEmp);
         _txtIdTiendaEmp.setText(user.getId_tienda());
