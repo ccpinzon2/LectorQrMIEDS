@@ -34,7 +34,6 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
     private static final String TAG = "UsuarioActivity";
 
     private TextView _txtNombreTipo;
-    private TextView _txtIdTienda;
     private TextView _txtDireccion;
     private TextView _txtTelefono;
     private TextView _txtMarca;
@@ -66,7 +65,6 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
 
     private void beginComponets() {
         _txtNombreTipo = (TextView) findViewById(R.id.txtNombreTipo);
-        _txtIdTienda = (TextView) findViewById(R.id.txtIdTienda);
         _txtDireccion = (TextView) findViewById(R.id.txtDireccion);
         _txtTelefono = (TextView) findViewById(R.id.txtTelefono);
         _txtMarca = (TextView) findViewById(R.id.txtMarca);
@@ -97,7 +95,6 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
         user = databaseAccess.getUsers().get(0);
         Log.e(TAG,user.toString(    ));
         _txtNombreTipo.setText(user.getTipo_tienda() + " - " + user.getNombre_tienda());
-        _txtIdTienda.setText(user.getId_tienda());
         _txtDireccion.setText(user.getDireccion_tienda());
         _txtTelefono.setText(user.getTelefono_tienda());
         _txtMarca.setText(user.getMarca_tienda());
