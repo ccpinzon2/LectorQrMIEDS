@@ -179,7 +179,7 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
         ServicioTraerGremio servicioTraerGremio = retrofit.create(ServicioTraerGremio.class);
 
         Map<String,String> datos = new HashMap<>();
-
+        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
         datos.put("op","traerGremio");
         datos.put("idest",idEDS);
 
@@ -224,6 +224,7 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
             ServicioLogin servicioLogin = retrofit.create(ServicioLogin.class);
 
             Map<String,String> datos = new HashMap<>();
+            datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
             datos.put("user",name_user);
             datos.put("pass",pass);
 

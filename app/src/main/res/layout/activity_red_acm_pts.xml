@@ -234,7 +234,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
-            android:text="redimir"/>
+            android:text="Acumular"/>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_SalirRedm"

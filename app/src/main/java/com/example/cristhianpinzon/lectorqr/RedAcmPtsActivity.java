@@ -1,9 +1,11 @@
 package com.example.cristhianpinzon.lectorqr;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -94,6 +96,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         ServicioUserApp servicioUserApp = retrofit.create(ServicioUserApp.class);
 
         Map<String,String> datos = new HashMap<>();
+        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
         datos.put("id_user",iduser);
         datos.put("id_establecimiento",idTienda);
         datos.put("tipo",tipoTienda);
@@ -234,59 +237,93 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         //id_user,valor,tipo_transaccion(A,R),id_redem (id del empelado o tienda), tipo_establecimiento T- tienda E EDs
         //fidelizacion -> (P, G)
 
-        String tipo_transaccion = (_rbAcumular.isChecked()) ? "A": "R";
-        String fidelizacion = (_rbPtsFidelizados.isChecked()) ? "P" : "G";
+        AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
+                RedAcmPtsActivity.this);
 
-        final ProgressDialog progressDialog = new ProgressDialog(RedAcmPtsActivity.this,R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Enviando");
-        progressDialog.show();
+// Setting Dialog Title
+        alertDialog2.setTitle("Confirmar Transaccion...");
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(getResources().getString(R.string.url_server))
-                .build();
+// Setting Dialog Message
+        alertDialog2.setMessage("Esta seguro de realizar esta transaccion ?");
 
-        ServicioRedimirAcumular servicioRedimirAcumular = retrofit.create(ServicioRedimirAcumular.class);
-//id_user=8001&valor=15&tipo_transaccion=A&id_redem=15001&tipo_establecimiento=T&fidelizacion=G
-        Map<String,String> datos = new HashMap<>();
-        datos.put("id_user",iduser);
-        datos.put("valor",_EditValor.getText().toString());
-        datos.put("tipo_transaccion",tipo_transaccion);
-        datos.put("id_redem",idRedem);
-        datos.put("tipo_establecimiento",tipoTienda);
-        datos.put("fidelizacion",fidelizacion);
+// Setting Icon to Dialog
+        alertDialog2.setIcon(R.drawable.ic_warn);
 
-//        for (Map.Entry entr : datos.entrySet()){
-//            Log.w(TAG, "redimirAcumular: " + entr.getKey() + ", " + entr.getValue() );
-//        }
-//
-        Call<RedimirAcumular> call = servicioRedimirAcumular.traerResultado(datos);
-        call.enqueue(new Callback<RedimirAcumular>() {
-            @Override
-            public void onResponse(Call<RedimirAcumular> call, Response<RedimirAcumular> response) {
-                Log.d(TAG, "RETROFITACUMULAR: " + response.body().getResultado().toString());
-                if (response.body().equals("FALSE")){
-                    Toast.makeText(RedAcmPtsActivity.this, "No se pudo realizar la operacion", Toast.LENGTH_SHORT).show();
-                }else {
-                    progressDialog.dismiss();
-                    //Toast.makeText(RedAcmPtsActivity.this, "Transaccion Realizada", Toast.LENGTH_SHORT).show();
-                    traerDatosTransaccionFinalizada();
+// Setting Positive "Yes" Btn
+        alertDialog2.setPositiveButton("SI",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to execute after dialog
+                        String tipo_transaccion = (_rbAcumular.isChecked()) ? "A": "R";
+                        String fidelizacion = (_rbPtsFidelizados.isChecked()) ? "P" : "G";
 
-                    finish();
-                    cargarActivityAnterior();
-                }
+                        final ProgressDialog progressDialog = new ProgressDialog(RedAcmPtsActivity.this,R.style.AppTheme_Dark_Dialog);
+                        progressDialog.setIndeterminate(true);
+                        progressDialog.setMessage("Enviando");
+                        progressDialog.show();
 
-                // TODO: 25/08/2017 VALIDACION DE DATOS AL REDIMIR O CUMULAR QUE NO SE PASE
-            }
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .addConverterFactory(GsonConverterFactory.create())
+                                .baseUrl(getResources().getString(R.string.url_server))
+                                .build();
 
-            @Override
-            public void onFailure(Call<RedimirAcumular> call, Throwable t) {
-                progressDialog.dismiss();
-                finish();
+                        ServicioRedimirAcumular servicioRedimirAcumular = retrofit.create(ServicioRedimirAcumular.class);
 
-            }
-        });
+                        Map<String,String> datos = new HashMap<>();
+                        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
+                        datos.put("id_user",iduser);
+                        datos.put("valor",_EditValor.getText().toString());
+                        datos.put("tipo_transaccion",tipo_transaccion);
+                        datos.put("id_redem",idRedem);
+                        datos.put("tipo_establecimiento",tipoTienda);
+                        datos.put("fidelizacion",fidelizacion);
+
+
+                        Call<RedimirAcumular> call = servicioRedimirAcumular.traerResultado(datos);
+                        call.enqueue(new Callback<RedimirAcumular>() {
+                            @Override
+                            public void onResponse(Call<RedimirAcumular> call, Response<RedimirAcumular> response) {
+                                Log.d(TAG, "RETROFITACUMULAR: " + response.body().getResultado().toString());
+                                if (response.body().equals("FALSE")){
+                                    Toast.makeText(RedAcmPtsActivity.this, "No se pudo realizar la operacion", Toast.LENGTH_SHORT).show();
+                                }else {
+                                    progressDialog.dismiss();
+                                    //Toast.makeText(RedAcmPtsActivity.this, "Transaccion Realizada", Toast.LENGTH_SHORT).show();
+                                    traerDatosTransaccionFinalizada();
+
+                                    finish();
+                                    cargarActivityAnterior();
+                                }
+
+                                // TODO: 25/08/2017 VALIDACION DE DATOS AL REDIMIR O CUMULAR QUE NO SE PASE
+                            }
+
+                            @Override
+                            public void onFailure(Call<RedimirAcumular> call, Throwable t) {
+                                progressDialog.dismiss();
+                                finish();
+
+                            }
+                        });
+                    }
+                });
+
+// Setting Negative "NO" Btn
+        alertDialog2.setNegativeButton("NO",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Write your code here to execute after dialog
+                        Toast.makeText(getApplicationContext(),
+                                "Transaccion Cancelada", Toast.LENGTH_SHORT)
+                                .show();
+                        dialog.cancel();
+                    }
+                });
+
+// Showing Alert Dialog
+        alertDialog2.show();
+
+
 
     }
 
@@ -306,6 +343,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         ServicioUserApp servicioUserApp = retrofit.create(ServicioUserApp.class);
 
         Map<String,String> datos = new HashMap<>();
+        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
         datos.put("id_user",iduser);
         datos.put("id_establecimiento",idTienda);
         datos.put("tipo",tipoTienda);

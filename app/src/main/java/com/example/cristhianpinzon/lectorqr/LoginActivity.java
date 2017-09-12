@@ -2,8 +2,11 @@ package com.example.cristhianpinzon.lectorqr;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -90,6 +93,22 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+        linkSingup = (TextView) findViewById(R.id.link_singup);
+        SpannableString mitextoU = new SpannableString("No tienes Cuenta? Contacta con nosotros..");
+        mitextoU.setSpan(new UnderlineSpan(), 0, mitextoU.length(), 0);
+        linkSingup.setText(mitextoU);
+
+
+        linkSingup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String url = "http://www.mieds.com/index/#contactomenu";
+
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+            }
+        });
     }
     private void cargarUsuarioActivity() {
 
@@ -162,6 +181,7 @@ public class LoginActivity extends AppCompatActivity {
         ServicioLogin servicioLogin = retrofit.create(ServicioLogin.class);
 
         Map<String,String> datos = new HashMap<>();
+        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
         datos.put("user",user);
         datos.put("pass",pass);
 

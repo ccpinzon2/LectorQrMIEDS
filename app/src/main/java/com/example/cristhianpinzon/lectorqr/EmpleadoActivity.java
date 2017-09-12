@@ -143,7 +143,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         Map<String,String> datos = new HashMap<>();
 
           String idEds = databaseAccess.getUsers().get(0).getId_tienda();
-
+          datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
           datos.put("id_user",id_userapp);
           datos.put("id_establecimiento",idEds);
           datos.put("tipo","E");
@@ -183,6 +183,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         ServicioTransaccionesEmpleado servicioTransacciones = retrofit.create(ServicioTransaccionesEmpleado.class);
 
         Map<String,String> datos = new HashMap<>();
+        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
         datos.put("op","transacciones");
         datos.put("idest",databaseAccess.getUsers().get(0).getId_tienda());
         datos.put("idemp",cedLogueado);
