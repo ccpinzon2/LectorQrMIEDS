@@ -62,7 +62,7 @@ public class ContactanosActivity extends AppCompatActivity {
         _iconWhatsaap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Uri uri = Uri.parse("smsto:" + "+6288889999");
+                Uri uri = Uri.parse("smsto:" + "+573164458560");
                 Intent i = new Intent(Intent.ACTION_SENDTO, uri);
                 i.setPackage("com.whatsapp");
                 startActivity(Intent.createChooser(i, ""));
@@ -72,7 +72,7 @@ public class ContactanosActivity extends AppCompatActivity {
         _iconTel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String phone = "31123402021";
+                String phone = "+573164458560";
                 Intent phoneIntent = new Intent(Intent.ACTION_DIAL, Uri.fromParts(
                         "tel", phone, null));
                 startActivity(phoneIntent);
@@ -83,9 +83,9 @@ public class ContactanosActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-                emailIntent.putExtra(Intent.EXTRA_EMAIL  , "mieds@mieds.com");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL  , "info@mieds.com");
                 emailIntent.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
-                emailIntent.putExtra(Intent.EXTRA_TEXT   , "Hola!");
+                emailIntent.putExtra(Intent.EXTRA_TEXT   , "");
 
                 emailIntent.setType("text/plain"); // <-- HERE
                 startActivity(emailIntent); // <-- AND HERE
