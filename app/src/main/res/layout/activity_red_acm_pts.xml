@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true"
-    android:background="@drawable/promocionesfondo"
+    android:background="@drawable/tcgrande"
     tools:context="com.example.cristhianpinzon.lectorqr.RedAcmPtsActivity">
 
     <LinearLayout
@@ -18,37 +18,37 @@
         android:weightSum="1">
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="20dp">
+            android:paddingBottom="1dp">
 
             <TextView
                 android:id="@+id/textView2"
-                android:layout_width="279dp"
-                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:text="REDIMIR/ACUMULAR PUNTOS"
                 android:textSize="16sp" />
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="0.58"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
                 android:layout_gravity="end"
-                android:src="@drawable/ic_points" />
+                android:src="@drawable/ic_points2" />
 
         </LinearLayout>
 
 
     <LinearLayout
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingBottom="20dp">
+        android:layout_height="match_parent"
+        android:paddingBottom="15dp">
 
-        <ImageView android:src="@drawable/ic_user"
-            android:layout_width="wrap_content"
+        <ImageView android:src="@drawable/ic_user2"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginBottom="5dp"
             android:layout_gravity="center_horizontal"

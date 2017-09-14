@@ -5,6 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fitsSystemWindows="true"
+    android:background="@drawable/fondo"
     tools:context="com.example.cristhianpinzon.lectorqr.LoginActivity">
 
 
@@ -12,16 +13,28 @@
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="56dp"
+        android:paddingTop="10dp"
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:weightSum="1">
 
 
-        <ImageView android:src="@drawable/principalmieds"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Aplicación desarrollada para gerentes establecimientos que deseen fidelizar usuarios de la aplicación Mieds Gasolina. "
+            android:paddingTop="4dp"
+            android:paddingBottom="15dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textAlignment="center"
+            />
+
+
+        <ImageView android:src="@drawable/logo_mieds"
             android:layout_width="wrap_content"
             android:layout_height="130dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center_horizontal"
             android:layout_weight="0.58" />
 
@@ -54,7 +67,8 @@
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_login"
-            android:layout_width="fill_parent"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
