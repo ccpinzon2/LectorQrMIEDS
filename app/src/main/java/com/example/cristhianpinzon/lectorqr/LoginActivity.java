@@ -102,11 +102,15 @@ public class LoginActivity extends AppCompatActivity {
         linkSingup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String url = "http://www.mieds.com/index/#contactomenu";
+//                String url = "http://www.mieds.com/index/#contactomenu";
+//
+//                Intent i = new Intent(Intent.ACTION_VIEW);
+//                i.setData(Uri.parse(url));
+//                startActivity(i);
 
-                Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse(url));
-                startActivity(i);
+                Intent intent = new Intent(getApplicationContext(),ContactanosActivity.class);
+                startActivity(intent);
+
             }
         });
     }
@@ -181,7 +185,7 @@ public class LoginActivity extends AppCompatActivity {
         ServicioLogin servicioLogin = retrofit.create(ServicioLogin.class);
 
         Map<String,String> datos = new HashMap<>();
-        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
+        datos.put("tck",getResources().getString(R.string.token));
         datos.put("user",user);
         datos.put("pass",pass);
 

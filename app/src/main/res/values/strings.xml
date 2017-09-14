@@ -1,4 +1,6 @@
 <resources>
     <string name="app_name">Puntos MiEDS</string>
     <string name="url_server">http://mieds.com/webserverv5/</string>
+    <string name="token">ICD1305MIEDS</string>
+    <string name="msgcontactanos">Atrae, Sirve y Fideliza clientes !!!</string>
 </resources>

@@ -3,6 +3,7 @@ package com.example.cristhianpinzon.lectorqr;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -22,6 +23,11 @@ import com.example.cristhianpinzon.lectorqr.Logica.Usuario;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioRedimirAcumular;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioUserApp;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -53,6 +59,8 @@ public class RedAcmPtsActivity extends AppCompatActivity {
     private TextView _txtPtsGlobales;
     private TextView _txtPtsFidelizacion;
     private TextView _txtTipoVehiculo;
+
+    private SimpleDraweeView _imgUsuario;
     private Button   _btnSalirRedm;
     private EditText _EditValor;
     private DatabaseAccess databaseAccess;
@@ -64,6 +72,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_red_acm_pts);
+        Fresco.initialize(this);
         databaseAccess = new DatabaseAccess(this);
         beginComponents();
         try {
@@ -96,7 +105,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         ServicioUserApp servicioUserApp = retrofit.create(ServicioUserApp.class);
 
         Map<String,String> datos = new HashMap<>();
-        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
+        datos.put("tck",getResources().getString(R.string.token));
         datos.put("id_user",iduser);
         datos.put("id_establecimiento",idTienda);
         datos.put("tipo",tipoTienda);
@@ -115,6 +124,17 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                 String email = (response.body().getEmail().equals(""))?"Sin Email": response.body().getEmail();
                 String tel = (response.body().getPhone_user().equals(""))?"Sin Telefono": response.body().getPhone_user();
                 String tipoV = (response.body().getTipo().equals(""))?"Sin Tipo": response.body().getTipo();
+
+                String url = (response.body().getFoto_perfil() != null ) ? response.body().getFoto_perfil(): "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-256.png";
+
+                Log.w(TAG, "fotousuario: " + url );
+                ScalingUtils.ScaleType scale = ScalingUtils.ScaleType.FIT_CENTER;
+                _imgUsuario.getHierarchy().setActualImageScaleType(scale);
+                Uri uri = Uri.parse(url);
+                _imgUsuario.setImageURI(uri);
+
+
+
 
                 _txtIdUser.setText(idUser);
                 _txtNombreUsuario.setText(nombre);
@@ -270,7 +290,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                         ServicioRedimirAcumular servicioRedimirAcumular = retrofit.create(ServicioRedimirAcumular.class);
 
                         Map<String,String> datos = new HashMap<>();
-                        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
+                        datos.put("tck",getResources().getString(R.string.token));
                         datos.put("id_user",iduser);
                         datos.put("valor",_EditValor.getText().toString());
                         datos.put("tipo_transaccion",tipo_transaccion);
@@ -343,7 +363,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         ServicioUserApp servicioUserApp = retrofit.create(ServicioUserApp.class);
 
         Map<String,String> datos = new HashMap<>();
-        datos.put("tck","$2y$10$zMyeP3ZCUMsYjNgMCDJ9OeE9dZLH");
+        datos.put("tck",getResources().getString(R.string.token));
         datos.put("id_user",iduser);
         datos.put("id_establecimiento",idTienda);
         datos.put("tipo",tipoTienda);
@@ -414,6 +434,9 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         _rbPtsGlobales.setVisibility(View.INVISIBLE);
         _rbPtsFidelizados = (RadioButton) findViewById(R.id.radio_Fidelizados);
         _rbPtsFidelizados.setVisibility(View.INVISIBLE);
+
+        _imgUsuario = (SimpleDraweeView) findViewById(R.id.frescoImgUsuario);
+
 
         //_txtValorRedimirAcumular = (TextView) findViewById(R.id.txt_valorRedimirAcumular);
 

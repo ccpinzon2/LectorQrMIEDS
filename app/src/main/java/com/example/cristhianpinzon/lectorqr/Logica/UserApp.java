@@ -10,6 +10,7 @@ public class UserApp {
     private String email;
     private String phone_user;
     private String nombre;
+    private String foto_perfil;
     private int ptos_globales;
     private int ptos_fidelizados;
 
@@ -22,6 +23,14 @@ public class UserApp {
         this.nombre = nombre;
         this.ptos_globales = ptos_globales;
         this.ptos_fidelizados = ptos_fidelizados;
+    }
+
+    public String getFoto_perfil() {
+        return foto_perfil;
+    }
+
+    public void setFoto_perfil(String foto_perfil) {
+        this.foto_perfil = foto_perfil;
     }
 
     public String getId() {

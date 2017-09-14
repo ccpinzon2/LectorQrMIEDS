@@ -19,16 +19,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UsuarioActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".RedAcmPtsActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".LoginEmpleadosActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".EmpleadoActivity"
-            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".UsuarioActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RedAcmPtsActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".LoginEmpleadosActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".EmpleadoActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".ContactanosActivity"></activity>
     </application>
-
-
 
 </manifest>
