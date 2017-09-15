@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class ContactanosActivity extends AppCompatActivity {
 
@@ -82,14 +84,27 @@ public class ContactanosActivity extends AppCompatActivity {
         _iconEmail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent emailIntent = new Intent(android.content.Intent.ACTION_SEND);
-                emailIntent.putExtra(Intent.EXTRA_EMAIL  , "info@mieds.com");
-                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
-                emailIntent.putExtra(Intent.EXTRA_TEXT   , "");
+                Log.i("Send email", "");
 
-                emailIntent.setType("text/plain"); // <-- HERE
-                startActivity(emailIntent); // <-- AND HERE
+                String[] TO = {"info@mieds.com"};
+                String[] CC = {""};
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setData(Uri.parse("mailto:"));
+                emailIntent.setType("text/plain");
 
+
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                emailIntent.putExtra(Intent.EXTRA_CC, CC);
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Contacto de Puntos MiEds");
+                emailIntent.putExtra(Intent.EXTRA_TEXT, "");
+
+                try {
+                    startActivity(Intent.createChooser(emailIntent, "Enviar email..."));
+
+                } catch (android.content.ActivityNotFoundException ex) {
+                    Toast.makeText(ContactanosActivity.this,
+                            "No tiene Cliente Email", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

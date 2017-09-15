@@ -137,7 +137,6 @@ public class RedAcmPtsActivity extends AppCompatActivity {
 
 
 
-
                 _txtIdUser.setText(idUser);
                 _txtNombreUsuario.setText(nombre);
                 _txtEmailUser.setText(email);

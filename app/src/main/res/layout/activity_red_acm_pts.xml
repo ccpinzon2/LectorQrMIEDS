@@ -54,16 +54,8 @@
             android:layout_gravity="center_horizontal"
             android:id="@+id/frescoImgUsuario"
             android:layout_width="160dp"
-            android:layout_height="100dp"
-            app:roundingBorderColor="@color/monsoon"
-            app:roundingBorderWidth="2dp"
-            app:roundingBorderPadding="2dp"
+            android:layout_height="130dp"
             />
-
-
-
-
-
 
         <TextView
             android:layout_gravity="center_horizontal"
@@ -102,9 +94,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingRight="20dp">
-
-
-
                 <TextView
                     android:textStyle="bold"
                     android:layout_width="match_parent"
@@ -177,10 +166,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-
-
-
 
         <RadioGroup
             xmlns:android="http://schemas.android.com/apk/res/android"

@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:text="EDS - La Super estacion"
             android:textSize="20sp"
+            android:textStyle="bold"
             android:paddingBottom="20dp"/>
 
 
@@ -69,20 +70,23 @@
 
 
                 <TextView
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:text="Telefono"/>
+                    android:text="Teléfono"/>
                 <TextView
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
                     android:text="Marca"/>
                 <TextView
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
-                    android:text="Direccion"/>
+                    android:text="Dirección"/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
