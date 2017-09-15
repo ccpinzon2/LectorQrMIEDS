@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:text="Cargando..."
             android:textSize="20sp"
+            android:textStyle="bold"
             android:paddingBottom="20dp"/>
 
 
@@ -61,20 +62,23 @@
                 android:paddingRight="20dp">
 
                 <TextView
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="Telefono"/>
+                    android:text="Teléfono: "/>
                 <TextView
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="Marca"/>
+                    android:text="Marca: "/>
                 <TextView
+                    android:textStyle="bold"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textSize="16sp"
-                    android:text="Direccion"/>
+                    android:text="Dirección: "/>
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
@@ -128,7 +132,7 @@
             android:layout_gravity=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ultima Transaccion: "
+            android:text="Última Transacción: "
             android:textColor="@color/primary_text"
             android:textSize="18sp"/>
         <TextView
@@ -143,7 +147,7 @@
             android:layout_gravity=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ultimo Cliente: "
+            android:text="Último Cliente: "
             android:textColor="@color/primary_text"
             android:textSize="18sp"/>
         <TextView

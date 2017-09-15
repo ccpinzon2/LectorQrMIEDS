@@ -7,6 +7,8 @@
         import android.support.v7.app.AppCompatActivity;
         import android.os.Bundle;
         import android.util.Log;
+        import android.view.Menu;
+        import android.view.MenuItem;
         import android.view.View;
         import android.widget.Button;
         import android.widget.TextView;
@@ -189,5 +191,29 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
     protected void onPause() {
         super.onPause();
 //        mScannerView.stopCamera();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbarmenu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.contactanos:
+                cargarContactanosActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void cargarContactanosActivity() {
+
+        Intent intent = new Intent(getApplicationContext(),ContactanosActivity.class);
+        startActivity(intent);
+
     }
 }

@@ -7,6 +7,8 @@ import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -248,7 +250,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
             intent.putExtra("iduser",parts[1]);
             startActivity(intent);
             mScannerView.stopCamera();
-            finish();
+            //finish();
         }catch (Exception e){
             Log.e(TAG, "cambiarPuntaje: error leerqr ->  " + e.getMessage() );
             Toast.makeText(this, "Qr Incorrecto", Toast.LENGTH_SHORT).show();
@@ -310,12 +312,54 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
             setContentView(mScannerView);
             mScannerView.setResultHandler(this); // Register ourselves as a handler for scan results.
             mScannerView.startCamera();         // Start camera
+
         }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        //    mScannerView.stopCamera();
+        try {
+            mScannerView.stopCamera();
+        }catch (Exception e){
+            Log.e(TAG, "onBackPressed: ERROR" );
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        try {
+            mScannerView.stopCamera();
+        }catch (Exception e){
+            Log.e(TAG, "onBackPressed: ERROR" );
+        }
+        Intent intent = new Intent(getApplicationContext(),EmpleadoActivity.class);
+        startActivity(intent);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbarmenu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.contactanos:
+                cargarContactanosActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void cargarContactanosActivity() {
+
+        Intent intent = new Intent(getApplicationContext(),ContactanosActivity.class);
+        startActivity(intent);
+
     }
 }

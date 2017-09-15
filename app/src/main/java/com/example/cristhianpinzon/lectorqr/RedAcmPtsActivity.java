@@ -10,6 +10,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -261,10 +263,23 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                 RedAcmPtsActivity.this);
 
 // Setting Dialog Title
-        alertDialog2.setTitle("Confirmar Transaccion...");
+        alertDialog2.setTitle("Confirmar Transacción...");
+
+        String msg = "";
+
+        String val = _EditValor.getText().toString();
+
+        if (_rbRedimir.isChecked()){
+            String puntsType = _rbPtsGlobales.isChecked() ? "Globales" :  "Fidelizados";
+            msg = "Esta seguro que desea redimir "+ val + " puntos " + puntsType + " al usuario " + _txtNombreUsuario.getText()  ;
+        }else {
+            msg = "Esta seguro que desea acumular $" + val  +" al usuario " +_txtNombreUsuario.getText() ;
+
+        }
+
 
 // Setting Dialog Message
-        alertDialog2.setMessage("Esta seguro de realizar esta transaccion ?");
+        alertDialog2.setMessage(msg);
 
 // Setting Icon to Dialog
         alertDialog2.setIcon(R.drawable.ic_warn);
@@ -309,13 +324,18 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                                 }else {
                                     progressDialog.dismiss();
                                     //Toast.makeText(RedAcmPtsActivity.this, "Transaccion Realizada", Toast.LENGTH_SHORT).show();
-                                    traerDatosTransaccionFinalizada();
+                                    try {
+                                        traerDatosTransaccionFinalizada();
+                                    }catch (Exception e){
+                                        Log.w(TAG, "Error trayendo ultima transaccion: " );
+                                    }
+
 
                                     finish();
                                     cargarActivityAnterior();
                                 }
 
-                                // TODO: 25/08/2017 VALIDACION DE DATOS AL REDIMIR O CUMULAR QUE NO SE PASE
+
                             }
 
                             @Override
@@ -351,10 +371,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
 
 
 
-        final ProgressDialog progressDialog = new ProgressDialog(RedAcmPtsActivity.this,R.style.AppTheme_Dark_Dialog);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Realizando Transaccion ..");
-        progressDialog.show();
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(getResources().getString(R.string.url_server))
@@ -398,7 +415,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                 mToastToShow.show();
                 toastCountDown.start();
 
-                progressDialog.dismiss();
+
             }
 
             @Override
@@ -406,7 +423,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                 Log.e("Error cargando datos",t.getMessage());
                 Toast.makeText(RedAcmPtsActivity.this, "Error, Revise Su conexion ", Toast.LENGTH_SHORT).show();
                 finish();
-                progressDialog.dismiss();
+
             }
         });
 
@@ -473,6 +490,30 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         }
 
 
+        startActivity(intent);
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbarmenu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.contactanos:
+                cargarContactanosActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void cargarContactanosActivity() {
+
+        Intent intent = new Intent(getApplicationContext(),ContactanosActivity.class);
         startActivity(intent);
 
     }

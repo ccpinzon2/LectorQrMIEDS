@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,6 +50,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
         databaseAccess = new DatabaseAccess(this);
         beginComponents();
 
@@ -94,9 +99,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
         linkSingup = (TextView) findViewById(R.id.link_singup);
-        SpannableString mitextoU = new SpannableString("No tienes Cuenta? Contacta con nosotros..");
-        mitextoU.setSpan(new UnderlineSpan(), 0, mitextoU.length(), 0);
-        linkSingup.setText(mitextoU);
+//        SpannableString mitextoU = new SpannableString("No tienes Cuenta? Contacta con nosotros..");
+//        mitextoU.setSpan(new UnderlineSpan(), 0, mitextoU.length(), 0);
+        linkSingup.setText("No tienes Cuenta? Contacta con nosotros..");
 
 
         linkSingup.setOnClickListener(new View.OnClickListener() {
@@ -107,13 +112,20 @@ public class LoginActivity extends AppCompatActivity {
 //                Intent i = new Intent(Intent.ACTION_VIEW);
 //                i.setData(Uri.parse(url));
 //                startActivity(i);
+                cargarContactanosActivity();
 
-                Intent intent = new Intent(getApplicationContext(),ContactanosActivity.class);
-                startActivity(intent);
 
             }
         });
     }
+
+    private void cargarContactanosActivity() {
+
+
+        Intent intent = new Intent(getApplicationContext(),ContactanosActivity.class);
+        startActivity(intent);
+    }
+
     private void cargarUsuarioActivity() {
 
         Intent intent = new Intent(getApplicationContext(),UsuarioActivity.class);
@@ -311,5 +323,22 @@ public class LoginActivity extends AppCompatActivity {
         databaseAccess.open();
         databaseAccess.addUser(user);
         databaseAccess.close();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbarmenu,menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.contactanos:
+                cargarContactanosActivity();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
