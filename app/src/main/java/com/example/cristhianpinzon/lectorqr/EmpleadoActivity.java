@@ -21,6 +21,10 @@ import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioTransaccionesEmpleado;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioUserApp;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
@@ -93,6 +97,12 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
 
         Uri uri  = Uri.parse(user.getLogo_tienda());
         SimpleDraweeView draweeView =  (SimpleDraweeView) findViewById(R.id.frescoImgEmpleado);
+        GenericDraweeHierarchy hierarchy =
+                GenericDraweeHierarchyBuilder.newInstance(getResources())
+                        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
+                        .setProgressBarImage(new ProgressBarDrawable())
+                        .build();
+        draweeView.setHierarchy(hierarchy);
         draweeView.setImageURI(uri);
         databaseAccess.close();
 

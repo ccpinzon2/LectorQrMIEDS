@@ -20,27 +20,28 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.cristhianpinzon.lectorqr.Logica.TraerGremio;
 import com.example.cristhianpinzon.lectorqr.Logica.Usuario;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.Employee;
-import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioLogin;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioTraerGremio;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("all")
 public class LoginEmpleadosActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     private static final String TAG = "LoginEmpleados" ;
@@ -108,6 +109,12 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
         _txViewNombreEds = (TextView) findViewById(R.id.txtNombreEdsLoginEmps);
         _txViewMarcaEds = (TextView) findViewById(R.id.txtMarcaEdsLoginEmps);
         _imgEds = (SimpleDraweeView) findViewById(R.id.frescoImgEds);
+        GenericDraweeHierarchy hierarchy =
+                GenericDraweeHierarchyBuilder.newInstance(getResources())
+                .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
+                .setProgressBarImage(new ProgressBarDrawable())
+                .build();
+        _imgEds.setHierarchy(hierarchy);
 
 
         _txViewNombreEds.setText(databaseAccess.getUsers().get(0).getNombre_tienda());
@@ -133,8 +140,6 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
         _btnIniciarEmpleado.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: 22/08/2017  hacer nueva columna en sqlite de logueo del empleado
-                //Log.d("pos 1" , " " + employees.get(_spinerEmpleados.getSelectedItemPosition()).getNombre_empleado());
 
                 loginEmpleado(employees.get(_spinerEmpleados.getSelectedItemPosition()).getCedula());
 
@@ -155,9 +160,6 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
     }
 
     private void validarCerrarSesion(String pass) {
-
-        // TODO: 8/09/17 ALERT CERRAR SESION
-
 
         Log.w(TAG, "cerrarSesion: "  + pass);
 

@@ -54,8 +54,7 @@
             android:layout_gravity="center_horizontal"
             android:id="@+id/frescoImgUsuario"
             android:layout_width="160dp"
-            android:layout_height="130dp"
-            />
+            android:layout_height="130dp" />
 
         <TextView
             android:layout_gravity="center_horizontal"

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,28 +17,26 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.example.cristhianpinzon.lectorqr.Logica.RedimirAcumular;
 import com.example.cristhianpinzon.lectorqr.Logica.UserApp;
-import com.example.cristhianpinzon.lectorqr.Logica.Usuario;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioRedimirAcumular;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioUserApp;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
-
 import java.util.HashMap;
 import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("all")
 public class RedAcmPtsActivity extends AppCompatActivity {
 
     private RadioButton _rbRedimir;
@@ -130,8 +127,12 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                 String url = (response.body().getFoto_perfil() != null ) ? response.body().getFoto_perfil(): "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-256.png";
 
                 Log.w(TAG, "fotousuario: " + url );
-                ScalingUtils.ScaleType scale = ScalingUtils.ScaleType.FIT_CENTER;
-                _imgUsuario.getHierarchy().setActualImageScaleType(scale);
+                GenericDraweeHierarchy hierarchy =
+                        GenericDraweeHierarchyBuilder.newInstance(getResources())
+                                .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
+                                .setProgressBarImage(new ProgressBarDrawable())
+                                .build();
+                _imgUsuario.setHierarchy(hierarchy);
                 Uri uri = Uri.parse(url);
                 _imgUsuario.setImageURI(uri);
 

@@ -1,34 +1,38 @@
-        package com.example.cristhianpinzon.lectorqr;
+package com.example.cristhianpinzon.lectorqr;
 
-        import android.Manifest;
-        import android.content.Intent;
-        import android.net.Uri;
-        import android.os.Build;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.Button;
-        import android.widget.TextView;
-        import android.widget.Toast;
-        import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
-        import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
-        import com.facebook.drawee.backends.pipeline.Fresco;
-        import com.facebook.drawee.view.SimpleDraweeView;
-        import com.google.zxing.Result;
-        import com.karumi.dexter.Dexter;
-        import com.karumi.dexter.PermissionToken;
-        import com.karumi.dexter.listener.DexterError;
-        import com.karumi.dexter.listener.PermissionDeniedResponse;
-        import com.karumi.dexter.listener.PermissionGrantedResponse;
-        import com.karumi.dexter.listener.PermissionRequest;
-        import com.karumi.dexter.listener.PermissionRequestErrorListener;
-        import com.karumi.dexter.listener.single.PermissionListener;
+import android.Manifest;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
+import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.drawable.ProgressBarDrawable;
+import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.drawee.generic.GenericDraweeHierarchy;
+import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.drawee.view.SimpleDraweeView;
+import com.google.zxing.Result;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
+import com.karumi.dexter.listener.single.PermissionListener;
+import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-        import me.dm7.barcodescanner.zxing.ZXingScannerView;
-
+@SuppressWarnings("all")
 public class UsuarioActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     private User user;
@@ -103,6 +107,12 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
 
         Uri uri = Uri.parse(user.getLogo_tienda());
         SimpleDraweeView draweeView = (SimpleDraweeView) findViewById(R.id.frescoImgTienda);
+        GenericDraweeHierarchy hierarchy =
+                GenericDraweeHierarchyBuilder.newInstance(getResources())
+                        .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
+                        .setProgressBarImage(new ProgressBarDrawable())
+                        .build();
+        draweeView.setHierarchy(hierarchy);
         draweeView.setImageURI(uri);
 
         databaseAccess.close();

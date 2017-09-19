@@ -2,39 +2,31 @@ package com.example.cristhianpinzon.lectorqr;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.example.cristhianpinzon.lectorqr.Logica.Empleado;
 import com.example.cristhianpinzon.lectorqr.Logica.Usuario;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.Employee;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioLogin;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@SuppressWarnings("all")
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivityClass";
@@ -42,19 +34,14 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtUser;
     private EditText txtPassword;
     private Button btnLogin;
-    private TextView linkSingup;
     private DatabaseAccess databaseAccess;
-    private User usuarioLogueado;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
         databaseAccess = new DatabaseAccess(this);
         beginComponents();
-
         validarSesion();
     }
 
@@ -98,25 +85,6 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
-        linkSingup = (TextView) findViewById(R.id.link_singup);
-//        SpannableString mitextoU = new SpannableString("No tienes Cuenta? Contacta con nosotros..");
-//        mitextoU.setSpan(new UnderlineSpan(), 0, mitextoU.length(), 0);
-        linkSingup.setText("No tienes Cuenta? Contacta con nosotros..");
-
-
-        linkSingup.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                String url = "http://www.mieds.com/index/#contactomenu";
-//
-//                Intent i = new Intent(Intent.ACTION_VIEW);
-//                i.setData(Uri.parse(url));
-//                startActivity(i);
-                cargarContactanosActivity();
-
-
-            }
-        });
     }
 
     private void cargarContactanosActivity() {
@@ -152,7 +120,7 @@ public class LoginActivity extends AppCompatActivity {
                 tipoTienda = tipo_tienda;
                 String marca_tienda = databaseAccess.getUsers().get(0).getMarca_tienda();
                 String logo_tienda = databaseAccess.getUsers().get(0).getLogo_tienda();
-                usuarioLogueado = new User(id_user, name_user, id_tienda, nombre_tienda, direccion_tienda, telefono_tienda, tipo_tienda, marca_tienda, logo_tienda);
+                User usuarioLogueado = new User(id_user, name_user, id_tienda, nombre_tienda, direccion_tienda, telefono_tienda, tipo_tienda, marca_tienda, logo_tienda);
             }else {
                 tipoTienda = "SINTIENDA";
             }
@@ -309,7 +277,7 @@ public class LoginActivity extends AppCompatActivity {
         else {
             txtUser.setError(null);
         }
-        if (pass.isEmpty() || pass.length() < 4 || pass.length() > 10 ){
+        if (pass.isEmpty() || pass.length() < 4 || pass.length() > 14 ){
             txtPassword.setError("Ingrese entre 4 y 10 caracteres alfanumericos");
             valid = false;
         }
@@ -336,6 +304,10 @@ public class LoginActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.contactanos:
                 cargarContactanosActivity();
+                return true;
+            case R.id.informacion:
+                Intent intent = new Intent(LoginActivity.this, Information_Activity.class);
+                startActivity(intent);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

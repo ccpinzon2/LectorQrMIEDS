@@ -34,8 +34,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             fresco:viewAspectRatio="1.3"
-            fresco:placeholderImage="@drawable/ic_qrscan"
-            />
+            fresco:placeholderImage="@drawable/ic_qrscan"/>
 
 
         <TextView

@@ -3,4 +3,9 @@
     <string name="url_server">http://mieds.com/webserverv5/</string>
     <string name="token">ICD1305MIEDS</string>
     <string name="msgcontactanos">Atrae, Sirve y Fideliza Clientes !!!</string>
+
+    <string name="title_activity_welcome">Home Screen</string>
+    <string name="next">SIGUIENTE</string>
+    <string name="skip">SALTAR</string>
+    <string name="start">INICIAR</string>
 </resources>
