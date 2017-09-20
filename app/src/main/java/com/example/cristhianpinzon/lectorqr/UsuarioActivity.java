@@ -215,6 +215,10 @@ public class UsuarioActivity extends AppCompatActivity implements ZXingScannerVi
             case R.id.contactanos:
                 cargarContactanosActivity();
                 return true;
+            case R.id.informacion:
+                Intent intent = new Intent(UsuarioActivity.this, Information_Activity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

@@ -347,6 +347,10 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
             case R.id.contactanos:
                 cargarContactanosActivity();
                 return true;
+            case R.id.informacion:
+                Intent intent = new Intent(LoginEmpleadosActivity.this, Information_Activity.class);
+                startActivity(intent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
