@@ -36,12 +36,13 @@
             />
 
 
-        <ImageView android:src="@drawable/logo_mieds"
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="130dp"
-            android:layout_marginBottom="10dp"
             android:layout_gravity="center_horizontal"
-            android:layout_weight="0.58" />
+            android:layout_marginBottom="10dp"
+            android:layout_weight="0.58"
+            android:src="@drawable/iconoprincipal" />
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
