@@ -5,14 +5,14 @@ import com.example.cristhianpinzon.lectorqr.Logica.RedimirAcumular;
 import java.util.Map;
 
 import retrofit2.Call;
+import retrofit2.http.FieldMap;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.QueryMap;
 
-/**
- * Created by Cristhian Pinzon on 25/08/2017.
- */
-
 public interface ServicioRedimirAcumular {
-    @GET("redeemPoints.php")
-    Call<RedimirAcumular> traerResultado(@QueryMap Map<String,String> datos);
+    @FormUrlEncoded
+    @POST("Redimir.php")
+    Call<RedimirAcumular> traerResultado(@FieldMap Map<String,String> datos);
 }

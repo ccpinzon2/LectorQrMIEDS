@@ -122,18 +122,23 @@
             android:id="@+id/btn_scan"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
-            android:padding="12dp"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/shape"
             android:onClick="QrScanner"
-            android:text="Escanear QR"/>
+            android:padding="12dp"
+            android:text="Escanear QR"
+            android:textColor="@color/white" />
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_CerrarSesion"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:background="@drawable/shape"
             android:padding="12dp"
-            android:text="Cerrar Sesion"/>
+            android:text="Cerrar Sesion"
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

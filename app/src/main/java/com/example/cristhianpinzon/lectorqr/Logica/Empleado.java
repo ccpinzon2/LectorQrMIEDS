@@ -5,19 +5,20 @@ package com.example.cristhianpinzon.lectorqr.Logica;
  */
 
 public class Empleado {
-    private String cedula;
-    private String nombre_empleado;
-    private String apellido_empleado;
 
-    public String getCedula() {
-        return cedula;
+    private String cedula_empleado;
+    private String nombre;
+    private String apellido;
+
+    public String getCedula_empleado() {
+        return cedula_empleado;
     }
 
-    public String getNombre_empleado() {
-        return nombre_empleado;
+    public String getNombre() {
+        return nombre;
     }
 
-    public String getApellido_empleado() {
-        return apellido_empleado;
+    public String getApellido() {
+        return apellido;
     }
 }

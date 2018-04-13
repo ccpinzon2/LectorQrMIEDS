@@ -1,51 +1,94 @@
 package com.example.cristhianpinzon.lectorqr.Logica;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Cristhian Pinzon on 09/08/2017.
- */
-
 public class Tienda {
-    private String id;
+
     private String nombre;
+    private String id;
     private String direccion;
-    private String telefono;
+    private String tipoEstab;
     private String tipo;
+    private String telefono;
     private String marca;
     private String logo_image;
-    private List<Empleado> list_empleado;
+    private List<Empleado> employees;
 
-    public List<Empleado> getList_empleado() {
-        return list_empleado;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getNombre() {
+    public String getNombre () {
         return nombre;
     }
 
-    public String getDireccion() {
+    public void setNombre (String nombre) {
+        this.nombre = nombre;
+    }
+
+    public String getId () {
+        return id;
+    }
+
+    public void setId (String id) {
+        this.id = id;
+    }
+
+    public String getDireccion () {
         return direccion;
     }
 
-    public String getTelefono() {
-        return telefono;
+    public void setDireccion (String direccion) {
+        this.direccion = direccion;
     }
 
-    public String getTipo() {
+    public String getTipoEstab () {
+        return tipoEstab;
+    }
+
+    public void setTipoEstab (String tipoEstab) {
+        this.tipoEstab = tipoEstab;
+    }
+
+    public String getTipo () {
         return tipo;
     }
 
-    public String getMarca() {
+    public void setTipo (String tipo) {
+        this.tipo = tipo;
+    }
+
+    public String getTelefono () {
+        return telefono;
+    }
+
+    public void setTelefono (String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getMarca () {
         return marca;
     }
 
-    public String getLogo_image() {
+    public void setMarca (String marca) {
+        this.marca = marca;
+    }
+
+    public String getLogo_image () {
         return logo_image;
+    }
+
+    public void setLogo_image (String logo_image) {
+        this.logo_image = logo_image;
+    }
+
+    public List<Empleado> getEmployees () {
+        return employees;
+    }
+
+    public void setEmployees (List<Empleado> employees) {
+        this.employees = employees;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ClassPojo [nombre = "+nombre+", id = "+id+", direccion = "+direccion+", tipoEstab = "+tipoEstab+", tipo = "+tipo+", telefono = "+telefono+", marca = "+marca+", logo_image = "+logo_image+", employees = "+employees+"]";
     }
 }

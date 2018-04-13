@@ -21,11 +21,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.cristhianpinzon.lectorqr.Logica.TraerGremio;
-import com.example.cristhianpinzon.lectorqr.Logica.Usuario;
+import com.example.cristhianpinzon.lectorqr.Logica.Response_login;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.Employee;
-import com.example.cristhianpinzon.lectorqr.Servicios.ServicioLogin;
-import com.example.cristhianpinzon.lectorqr.Servicios.ServicioTraerGremio;
+import com.example.cristhianpinzon.lectorqr.Servicios.Connect;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -38,8 +37,6 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 @SuppressWarnings("all")
 public class LoginEmpleadosActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
@@ -84,7 +81,6 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
             finish();
 
         }
-
 
     }
 
@@ -175,94 +171,59 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
         idEDS = databaseAccess.getUsers().get(0).getId_tienda();
         databaseAccess.close();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(getResources().getString(R.string.url_server))
-                .build();
-
-        ServicioTraerGremio servicioTraerGremio = retrofit.create(ServicioTraerGremio.class);
-
         Map<String,String> datos = new HashMap<>();
-        datos.put("tck",getResources().getString(R.string.token));
         datos.put("op","traerGremio");
         datos.put("idest",idEDS);
 
-        Call<TraerGremio> call = servicioTraerGremio.traerGremio(datos);
-
-        call.enqueue(new Callback<TraerGremio>() {
+        Connect.getInstance(this).validate_guild(datos, new Callback<TraerGremio>() {
             @Override
             public void onResponse(Call<TraerGremio> call, Response<TraerGremio> response) {
-
                 if(response.body().getId_gremio().equals("304")){
                     _imgGremio.setVisibility(View.VISIBLE);
                 }
-
             }
 
             @Override
             public void onFailure(Call<TraerGremio> call, Throwable t) {
-
                 _imgGremio.setVisibility(View.INVISIBLE);
-
             }
         });
-
-
-
     }
 
     private void validarPass(String name_user, String pass) {
 
+        final ProgressDialog progressDialog = new ProgressDialog(LoginEmpleadosActivity.this,R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Cerrando Sesion...");
+        progressDialog.show();
 
+        Map<String,String> data = new HashMap<>();
+        data.put("user", name_user);
+        data.put("pass", pass);
 
-            final ProgressDialog progressDialog = new ProgressDialog(LoginEmpleadosActivity.this,R.style.AppTheme_Dark_Dialog);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Cerrando Sesion");
-            progressDialog.show();
-
-
-            Retrofit retrofit = new Retrofit.Builder()
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .baseUrl(getResources().getString(R.string.url_server))
-                    .build();
-            ServicioLogin servicioLogin = retrofit.create(ServicioLogin.class);
-
-            Map<String,String> datos = new HashMap<>();
-            datos.put("tck",getResources().getString(R.string.token));
-            datos.put("user",name_user);
-            datos.put("pass",pass);
-
-            Call<Usuario> call = servicioLogin.traerUsuarioLogin(datos);
-
-            call.enqueue(new Callback<Usuario>() {
-                @Override
-                public void onResponse(Call<Usuario> call, Response<Usuario> response) {
-                    try {
-                        if (response.body().getName_user().equals("FALSE") || response.body().getId_user() == null){
-                            falloCerrarSesion();
-                        }else {
-
-                            cerrarSesion();
-
-
-                        }
-                    }catch (Exception e){
-                        Log.e("ErrorRetrofit",e.getMessage());
-
+        Connect.getInstance(this).login_app(data, new Callback<Response_login>() {
+            @Override
+            public void onResponse(Call<Response_login> call, Response<Response_login> response) {
+                try {
+                    if (!response.body().getStatus().equals("OK")){
+                        falloCerrarSesion();
+                    }else {
+                        cerrarSesion();
                     }
-
-                    progressDialog.dismiss();
-
+                }catch (Exception e){
+                    Log.e("ErrorRetrofit",e.getMessage());
                 }
+                progressDialog.dismiss();
+            }
 
-                @Override
-                public void onFailure(Call<Usuario> call, Throwable t) {
+            @Override
+            public void onFailure(Call<Response_login> call, Throwable t) {
+                falloCerrarSesion();
+                progressDialog.dismiss();
+            }
+        });
 
-                    falloCerrarSesion();
-                    progressDialog.dismiss();
-                }
-            });
-        }
+    }
 
     private void cerrarSesion() {
         databaseAccess.open();

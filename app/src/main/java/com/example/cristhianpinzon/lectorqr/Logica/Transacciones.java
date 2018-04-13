@@ -1,17 +1,40 @@
 package com.example.cristhianpinzon.lectorqr.Logica;
 
-/**
- * Created by Cristhian Pinzon on 07/09/2017.
- */
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 public class Transacciones {
+
+    @SerializedName("puntos")
+    @Expose
     private String puntos;
+
+    @SerializedName("id_userapp")
+    @Expose
     private String id_userapp;
+
+    @SerializedName("id_estacion")
+    @Expose
     private String id_estacion;
+
+    @SerializedName("cedula_empleado")
+    @Expose
     private String cedula_empleado;
+
+    @SerializedName("nombre_empleado")
+    @Expose
     private String nombre_empleado;
+
+    @SerializedName("tipo_puntaje")
+    @Expose
     private String tipo_puntaje;
+
+    @SerializedName("fecha_puntaje")
+    @Expose
     private String fecha_puntaje;
+
+    @SerializedName("nombre_usuario")
+    @Expose
     private String nombre_usuario;
 
 

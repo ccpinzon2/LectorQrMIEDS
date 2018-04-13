@@ -12,19 +12,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 import com.example.cristhianpinzon.lectorqr.Logica.Empleado;
-import com.example.cristhianpinzon.lectorqr.Logica.Usuario;
+import com.example.cristhianpinzon.lectorqr.Logica.Response_login;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.Employee;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
-import com.example.cristhianpinzon.lectorqr.Servicios.ServicioLogin;
+import com.example.cristhianpinzon.lectorqr.Servicios.Connect;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 @SuppressWarnings("all")
 public class LoginActivity extends AppCompatActivity {
@@ -106,7 +106,6 @@ public class LoginActivity extends AppCompatActivity {
         //
         String tipoTienda = "";
         try {
-
             databaseAccess.open();
             if (databaseAccess.getUsers().size() != 0) {
                 String id_user = databaseAccess.getUsers().get(0).getId_user();
@@ -157,30 +156,22 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Iniciando Sesion");
         progressDialog.show();
 
+        Map<String,String> data = new HashMap<>();
+        data.put("user", user);
+        data.put("pass", pass);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(getResources().getString(R.string.url_server))
-                .build();
-        ServicioLogin servicioLogin = retrofit.create(ServicioLogin.class);
-
-        Map<String,String> datos = new HashMap<>();
-        datos.put("tck",getResources().getString(R.string.token));
-        datos.put("user",user);
-        datos.put("pass",pass);
-
-        Call<Usuario> call = servicioLogin.traerUsuarioLogin(datos);
-
-        call.enqueue(new Callback<Usuario>() {
+        Connect.getInstance(this).login_app(data, new Callback<Response_login>() {
             @Override
-            public void onResponse(Call<Usuario> call, Response<Usuario> response) {
+            public void onResponse(Call<Response_login> call, Response<Response_login> response) {
                 try {
-                    if (response.body().getName_user().equals("FALSE") || response.body().getId_user() == null){
+                    Log.d("Response login", ""+response.message());
+                    Log.d("Response login", ""+response.body().getStatus());
+                    if (!response.body().getStatus().equals("OK")){
                         onLoginFailed();
-                    }else {
+                    } else {
                         User loguearUsuario = new User(
-                                response.body().getId_user(),
-                                response.body().getName_user(),
+                                response.body().getUser().getId(),
+                                response.body().getUser().getNombre(),
                                 response.body().getTienda().getId(),
                                 response.body().getTienda().getNombre(),
                                 response.body().getTienda().getDireccion(),
@@ -190,7 +181,9 @@ public class LoginActivity extends AppCompatActivity {
                                 response.body().getTienda().getLogo_image()
                         );
 
-                        loguearUsuarioApp(loguearUsuario ,  response.body().getTienda().getList_empleado());
+                        Log.d("Response", response.body().getUser().toString()+"   Tienda  "+response.body().getTienda().toString());
+
+                        loguearUsuarioApp(loguearUsuario ,  response.body().getTienda().getEmployees());
 
                     }
                 }catch (Exception e){
@@ -199,15 +192,16 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 progressDialog.dismiss();
-
             }
 
             @Override
-            public void onFailure(Call<Usuario> call, Throwable t) {
+            public void onFailure(Call<Response_login> call, Throwable t) {
+                Log.e("Error login",""+t.getMessage());
                 onLoginFailed();
                 progressDialog.dismiss();
             }
         });
+
     }
 
     private void loguearUsuarioApp(User loguearUsuario, List<Empleado> list_empleado) {
@@ -234,7 +228,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                 for (Empleado emp : list_empleado ) {
-                    Employee employee =  new Employee(emp.getCedula(),emp.getNombre_empleado(),emp.getApellido_empleado(),0);
+                    Employee employee =  new Employee(emp.getCedula_empleado(),emp.getNombre(),emp.getApellido(),0);
                     databaseAccess.open();
                     databaseAccess.addEmployee(employee);
                     databaseAccess.close();

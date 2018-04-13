@@ -1,36 +1,51 @@
 package com.example.cristhianpinzon.lectorqr.Logica;
 
-/**
- * Created by Cristhian Pinzon on 24/08/2017.
- */
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class UserApp {
+
+    @SerializedName("id_userapp")
+    @Expose
     private String id;
+
+    @SerializedName("tipo")
+    @Expose
     private String tipo;
+
+    @SerializedName("email")
+    @Expose
     private String email;
+
+    @SerializedName("phone_user")
+    @Expose
     private String phone_user;
+
+    @SerializedName("nombre_usuario")
+    @Expose
     private String nombre;
+
+    @SerializedName("foto_perfil")
+    @Expose
     private String foto_perfil;
+
     private int ptos_globales;
     private int ptos_fidelizados;
+    private List<Placa> placas;
 
 
-    public UserApp(String id, String tipo, String email, String phone_user, String nombre, int ptos_globales, int ptos_fidelizados) {
+    public UserApp(String id, String tipo, String email, String phone_user, String nombre) {
         this.id = id;
         this.tipo = tipo;
         this.email = email;
         this.phone_user = phone_user;
         this.nombre = nombre;
-        this.ptos_globales = ptos_globales;
-        this.ptos_fidelizados = ptos_fidelizados;
     }
 
     public String getFoto_perfil() {
         return foto_perfil;
-    }
-
-    public void setFoto_perfil(String foto_perfil) {
-        this.foto_perfil = foto_perfil;
     }
 
     public String getId() {
@@ -45,32 +60,16 @@ public class UserApp {
         return tipo;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public String getPhone_user() {
         return phone_user;
     }
 
-    public void setPhone_user(String phone_user) {
-        this.phone_user = phone_user;
-    }
-
     public String getNombre() {
         return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
     }
 
     public int getPtos_globales() {
@@ -85,8 +84,16 @@ public class UserApp {
         return ptos_fidelizados;
     }
 
+    public List<Placa> getPlacas() {
+        return placas;
+    }
+
     public void setPtos_fidelizados(int ptos_fidelizados) {
         this.ptos_fidelizados = ptos_fidelizados;
+    }
+
+    public void setPlacas(List<Placa> placas) {
+        this.placas = placas;
     }
 
     @Override

@@ -1,18 +1,15 @@
 package com.example.cristhianpinzon.lectorqr.Logica;
 
-/**
- * Created by Cristhian Pinzon on 25/08/2017.
- */
-
 public class RedimirAcumular {
-    private String resultado;
 
+    private String status;
+    private String message;
 
-    public String getResultado() {
-        return resultado;
+    public String getStatus() {
+        return status;
     }
 
-    public void setResultado(String resultado) {
-        this.resultado = resultado;
+    public String getMessage() {
+        return message;
     }
 }

@@ -1,10 +1,7 @@
 package com.example.cristhianpinzon.lectorqr.Logica;
 
-/**
- * Created by cristhianpinzon on 8/09/17.
- */
-
 public class TraerGremio {
+
     private String id_estacion;
     private String nombre_estacion;
     private String id_gremio;

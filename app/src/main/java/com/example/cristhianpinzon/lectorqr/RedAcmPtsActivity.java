@@ -12,16 +12,22 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.cristhianpinzon.lectorqr.Logica.Placa;
 import com.example.cristhianpinzon.lectorqr.Logica.RedimirAcumular;
-import com.example.cristhianpinzon.lectorqr.Logica.UserApp;
+import com.example.cristhianpinzon.lectorqr.Logica.Response_user;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
-import com.example.cristhianpinzon.lectorqr.Servicios.ServicioRedimirAcumular;
-import com.example.cristhianpinzon.lectorqr.Servicios.ServicioUserApp;
+import com.example.cristhianpinzon.lectorqr.Servicios.Connect;
+import com.example.cristhianpinzon.lectorqr.adapters.AdapterPlacas;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -29,12 +35,11 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.view.SimpleDraweeView;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 @SuppressWarnings("all")
 public class RedAcmPtsActivity extends AppCompatActivity {
@@ -44,6 +49,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
     private RadioButton _rbPtsGlobales;
     private RadioButton _rbPtsFidelizados;
     private Button      _btnRedimirAcumularPts;
+    private RadioGroup tipoPuntos;
 
     private String iduser;
     private String idTienda;
@@ -59,10 +65,16 @@ public class RedAcmPtsActivity extends AppCompatActivity {
     private TextView _txtPtsFidelizacion;
     private TextView _txtTipoVehiculo;
 
+    private TextView tePuntosRegalo;
+    private TextView tePuntosFidelizados;
+    private Button btnPlaca;
+
     private SimpleDraweeView _imgUsuario;
     private Button   _btnSalirRedm;
     private EditText _EditValor;
     private DatabaseAccess databaseAccess;
+
+    private List<Placa> placas;
 
  //// TODO: 04/09/2017 VALIDAR QUE EL CAMPO NO ESTE VACIO AL REDIMIR/ACUMULAR Y PONER EN BLANCO AL CMABIAR DE RADIO BUTTON 
 // TODO: 04/09/2017 EVITAR ERRORERS AL LEER QR INVALIDO 
@@ -96,65 +108,64 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         progressDialog.setIndeterminate(true);
         progressDialog.setMessage("Trayendo Datos");
         progressDialog.show();
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(getResources().getString(R.string.url_server))
-                .build();
-
-        ServicioUserApp servicioUserApp = retrofit.create(ServicioUserApp.class);
 
         Map<String,String> datos = new HashMap<>();
-        datos.put("tck",getResources().getString(R.string.token));
+        //datos.put("tck",getResources().getString(R.string.token));
         datos.put("id_user",iduser);
         datos.put("id_establecimiento",idTienda);
         datos.put("tipo",tipoTienda);
 
-        Call<UserApp> call = servicioUserApp.traerUserApp(datos);
+        Log.d("ATRIBUTES USER", "ID: "+iduser+" ID_EST: "+idTienda+"  TIPO: "+tipoTienda);
 
-        call.enqueue(new Callback<UserApp>() {
+        Connect.getInstance(this).get_user_qr(iduser, idTienda, tipoTienda, new Callback<Response_user>() {
             @Override
-            public void onResponse(Call<UserApp> call, Response<UserApp> response) {
-                //try {
-
+            public void onResponse(Call<Response_user> call, Response<Response_user> response) {
                 Log.d(TAG, "onResponse: " + response.body().toString());
 
-                String idUser = (response.body().getId().equals(""))?"Sin Id": response.body().getId();
-                String nombre = (response.body().getNombre().equals(""))?"Sin Nombre": response.body().getNombre();
-                String email = (response.body().getEmail().equals(""))?"Sin Email": response.body().getEmail();
-                String tel = (response.body().getPhone_user().equals(""))?"Sin Telefono": response.body().getPhone_user();
-                String tipoV = (response.body().getTipo().equals(""))?"Sin Tipo": response.body().getTipo();
+                if (response.body().getStatus().equals("OK")) {
+                    String idUser = (response.body().getUsuario().getId().equals(""))?"Sin Id": response.body().getUsuario().getId();
+                    String nombre = (response.body().getUsuario().getNombre().equals(""))?"Sin Nombre": response.body().getUsuario().getNombre();
+                    String email = (response.body().getUsuario().getEmail().equals(""))?"Sin Email": response.body().getUsuario().getEmail();
+                    String tel = (response.body().getUsuario().getPhone_user().equals(""))?"Sin Telefono": response.body().getUsuario().getPhone_user();
+                    String tipoV = (response.body().getUsuario().getTipo().equals(""))?"Sin Tipo": response.body().getUsuario().getTipo();
 
-                String url = (response.body().getFoto_perfil() != null ) ? response.body().getFoto_perfil(): "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-256.png";
+                    String url = (response.body().getUsuario().getFoto_perfil() != null ) ? response.body().getUsuario().getFoto_perfil(): "https://cdn4.iconfinder.com/data/icons/small-n-flat/24/user-alt-256.png";
 
-                Log.w(TAG, "fotousuario: " + url );
-                GenericDraweeHierarchy hierarchy =
-                        GenericDraweeHierarchyBuilder.newInstance(getResources())
-                                .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
-                                .setProgressBarImage(new ProgressBarDrawable())
-                                .build();
-                _imgUsuario.setHierarchy(hierarchy);
-                Uri uri = Uri.parse(url);
-                _imgUsuario.setImageURI(uri);
+                    if (tipoTienda.equals("E")) {
+                        tePuntosRegalo.setVisibility(View.GONE);
+                        _txtPtsGlobales.setVisibility(View.GONE);
+                        btnPlaca.setVisibility(View.VISIBLE);
+                        placas = response.body().getPuntosPlacas();
+                    } else {
+                        _txtPtsGlobales.setText(String.valueOf(response.body().getPuntosRegalo()));
+                    }
 
+                    Log.w(TAG, "fotousuario: " + url );
+                    GenericDraweeHierarchy hierarchy =
+                            GenericDraweeHierarchyBuilder.newInstance(getResources())
+                                    .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
+                                    .setProgressBarImage(new ProgressBarDrawable())
+                                    .build();
+                    _imgUsuario.setHierarchy(hierarchy);
+                    Uri uri = Uri.parse(url);
+                    _imgUsuario.setImageURI(uri);
+                    _txtIdUser.setText(idUser);
+                    _txtNombreUsuario.setText(nombre);
+                    _txtEmailUser.setText(email);
+                    _txtTelefonoUser.setText(tel);
+                    _txtTipoVehiculo.setText(tipoV);
 
-
-                _txtIdUser.setText(idUser);
-                _txtNombreUsuario.setText(nombre);
-                _txtEmailUser.setText(email);
-                _txtTelefonoUser.setText(tel);
-                _txtTipoVehiculo.setText(tipoV);
-                _txtPtsGlobales.setText(String.valueOf(response.body().getPtos_globales()));
-                _txtPtsFidelizacion.setText(String.valueOf(response.body().getPtos_fidelizados()));
-                progressDialog.dismiss();
-//                }catch (Exception e){
-//                    Log.e("Error cargando datos",e.getMessage());
-//                    Toast.makeText(PuntajeActivity.this, "Error, Revise Su conexion 1", Toast.LENGTH_SHORT).show();
-//                    progressDialog.dismiss();
-//                }
+                    progressDialog.dismiss();
+                } else {
+                    Log.d("Error response user: ", ""+response.body().getStatus());
+                    Toast.makeText(RedAcmPtsActivity.this, "Ocurrio un problema intente mas tarde", Toast.LENGTH_SHORT).show();
+                    finish();
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
-            public void onFailure(Call<UserApp> call, Throwable t) {
+            public void onFailure(Call<Response_user> call, Throwable t) {
                 Log.e("Error cargando datos",t.getMessage());
                 Toast.makeText(RedAcmPtsActivity.this, "Error, Revise Su conexion 22", Toast.LENGTH_SHORT).show();
                 finish();
@@ -224,183 +235,187 @@ public class RedAcmPtsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
-                if (_EditValor.getText().toString().isEmpty() || _EditValor.getText().length() > 7 ){
-                    _EditValor.setError("Dato invalido");
-
-                }else {
-                    int val = Integer.parseInt(_EditValor.getText().toString());
-
-                    int ptsGlobales = Integer.parseInt(_txtPtsGlobales.getText().toString());
-                    int ptsFidelizados = Integer.parseInt(_txtPtsFidelizacion.getText().toString());
-
-                    if (val <= ptsGlobales && _rbPtsGlobales.isChecked()) {
-                        redimirAcumular();
-                    } else if (val <= ptsFidelizados && _rbPtsFidelizados.isChecked()) {
-                        redimirAcumular();
-                    } else if (_rbAcumular.isChecked()) {
-                        redimirAcumular();
+                if (tipoTienda.equals("E")) {
+                    if (_EditValor.getText().toString().isEmpty() || _EditValor.getText().length() > 7) {
+                        _EditValor.setError("Dato invalido");
+                    } else if (btnPlaca.getText().toString().equals("Selecciona la placa")) {
+                        Toast.makeText(RedAcmPtsActivity.this, "Selecciona una placa de usuario", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(RedAcmPtsActivity.this, "No puede redimir esa cantidad", Toast.LENGTH_SHORT).show();
+                        int valor = Integer.parseInt(_EditValor.getText().toString());
+
+                        if (_rbRedimir.isChecked()) {
+                            if (placa_redimible(btnPlaca.getText().toString(), valor)) {
+                                redimirAcumular();
+                            } else {
+                                Toast.makeText(RedAcmPtsActivity.this, "El valor no debe superar el total de puntos", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            redimirAcumular();
+                        }
+
                     }
-
+                } else {
+                    if (_EditValor.getText().toString().isEmpty() || _EditValor.getText().length() > 7) {
+                        _EditValor.setError("Dato invalido");
+                    } else {
+                        if (_rbRedimir.isChecked()) {
+                            int valor = Integer.parseInt(_EditValor.getText().toString());
+                            int puntos_regalo = Integer.parseInt(_txtPtsGlobales.getText().toString());
+                            if (valor <= puntos_regalo ) {
+                                redimirAcumular();
+                            } else {
+                                Toast.makeText(RedAcmPtsActivity.this, "El valor no debe superar el total de puntos", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            redimirAcumular();
+                        }
+                    }
                 }
-
             }
-
-
         });
 
+        btnPlaca.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alert_placas();
+            }
+        });
+    }
 
+    private void alert_placas() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Seleccione la placa del usuario");
+        ListView listView = new ListView(this);
+        listView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        listView.setDividerHeight(1);
+        AdapterPlacas adapterPlacas = new AdapterPlacas(placas, this);
+        listView.setAdapter(adapterPlacas);
+        builder.setView(listView);
+        builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = builder.create();
+        listView.setOnItemClickListener(onItemSelectedListener(alertDialog));
+        alertDialog.show();
+    }
 
+    private AdapterView.OnItemClickListener onItemSelectedListener(final AlertDialog dialog) {
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                dialog.cancel();
+                btnPlaca.setText(placas.get(position).getPlaca());
+            }
+        };
     }
 
     private void redimirAcumular() {
         //id_user,valor,tipo_transaccion(A,R),id_redem (id del empelado o tienda), tipo_establecimiento T- tienda E EDs
         //fidelizacion -> (P, G)
-
-        AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
-                RedAcmPtsActivity.this);
-
-// Setting Dialog Title
+        AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(RedAcmPtsActivity.this);
         alertDialog2.setTitle("Confirmar Transacción...");
-
         String msg = "";
-
         String val = _EditValor.getText().toString();
 
         if (_rbRedimir.isChecked()){
-            String puntsType = _rbPtsGlobales.isChecked() ? "Globales" :  "Fidelizados";
+            String puntsType = (tipoTienda.equals("T")) ? "Globales" :  "Fidelizados";
             msg = "Esta seguro que desea redimir "+ val + " puntos " + puntsType + " al usuario " + _txtNombreUsuario.getText()  ;
         }else {
             msg = "Esta seguro que desea acumular $" + val  +" al usuario " +_txtNombreUsuario.getText() ;
-
         }
 
-
-// Setting Dialog Message
         alertDialog2.setMessage(msg);
-
-// Setting Icon to Dialog
         alertDialog2.setIcon(R.drawable.ic_warn);
-
-// Setting Positive "Yes" Btn
         alertDialog2.setPositiveButton("SI",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // Write your code here to execute after dialog
-                        String tipo_transaccion = (_rbAcumular.isChecked()) ? "A": "R";
-                        String fidelizacion = (_rbPtsFidelizados.isChecked()) ? "P" : "G";
-
-                        final ProgressDialog progressDialog = new ProgressDialog(RedAcmPtsActivity.this,R.style.AppTheme_Dark_Dialog);
-                        progressDialog.setIndeterminate(true);
-                        progressDialog.setMessage("Enviando");
-                        progressDialog.show();
-
-                        Retrofit retrofit = new Retrofit.Builder()
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .baseUrl(getResources().getString(R.string.url_server))
-                                .build();
-
-                        ServicioRedimirAcumular servicioRedimirAcumular = retrofit.create(ServicioRedimirAcumular.class);
-
-                        Map<String,String> datos = new HashMap<>();
-                        datos.put("tck",getResources().getString(R.string.token));
-                        datos.put("id_user",iduser);
-                        datos.put("valor",_EditValor.getText().toString());
-                        datos.put("tipo_transaccion",tipo_transaccion);
-                        datos.put("id_redem",idRedem);
-                        datos.put("tipo_establecimiento",tipoTienda);
-                        datos.put("fidelizacion",fidelizacion);
-
-
-                        Call<RedimirAcumular> call = servicioRedimirAcumular.traerResultado(datos);
-                        call.enqueue(new Callback<RedimirAcumular>() {
-                            @Override
-                            public void onResponse(Call<RedimirAcumular> call, Response<RedimirAcumular> response) {
-                                Log.d(TAG, "RETROFITACUMULAR: " + response.body().getResultado().toString());
-                                if (response.body().equals("FALSE")){
-                                    Toast.makeText(RedAcmPtsActivity.this, "No se pudo realizar la operacion", Toast.LENGTH_SHORT).show();
-                                }else {
-                                    progressDialog.dismiss();
-                                    //Toast.makeText(RedAcmPtsActivity.this, "Transaccion Realizada", Toast.LENGTH_SHORT).show();
-                                    try {
-                                        traerDatosTransaccionFinalizada();
-                                    }catch (Exception e){
-                                        Log.w(TAG, "Error trayendo ultima transaccion: " );
-                                    }
-
-
-                                    finish();
-                                    cargarActivityAnterior();
-                                }
-
-
-                            }
-
-                            @Override
-                            public void onFailure(Call<RedimirAcumular> call, Throwable t) {
-                                progressDialog.dismiss();
-                                finish();
-
-                            }
-                        });
+                        transaccion_puntos();
                     }
                 });
-
-// Setting Negative "NO" Btn
         alertDialog2.setNegativeButton("NO",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // Write your code here to execute after dialog
-                        Toast.makeText(getApplicationContext(),
-                                "Transaccion Cancelada", Toast.LENGTH_SHORT)
-                                .show();
+                        Toast.makeText(getApplicationContext(), "Transaccion Cancelada", Toast.LENGTH_SHORT).show();
                         dialog.cancel();
                     }
                 });
-
-// Showing Alert Dialog
         alertDialog2.show();
+    }
 
+    private void transaccion_puntos() {
+        String tipo_transaccion = (_rbAcumular.isChecked()) ? "A": "R";
+        String fidelizacion = (tipoTienda.equals("E")) ? "F" : "G";
 
+        final ProgressDialog progressDialog = new ProgressDialog(RedAcmPtsActivity.this,R.style.AppTheme_Dark_Dialog);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Enviando");
+        progressDialog.show();
 
+        Map<String,String> datos = new HashMap<>();
+        datos.put("id_user",iduser);
+        datos.put("valor",_EditValor.getText().toString());
+        datos.put("tipo_tran",tipo_transaccion);
+        datos.put("idEmpTi",idRedem);
+        datos.put("tipo_estab",tipoTienda);
+        datos.put("tipoPunto",fidelizacion);
+
+        if (tipoTienda.equals("E"))
+            datos.put("placa", btnPlaca.getText().toString());
+
+        Connect.getInstance(RedAcmPtsActivity.this).manage_points(datos, new Callback<RedimirAcumular>() {
+            @Override
+            public void onResponse(Call<RedimirAcumular> call, Response<RedimirAcumular> response) {
+                Log.d(TAG, "RETROFITACUMULAR: " + response.body().getMessage());
+                if (!response.body().getStatus().equals("OK")){
+                    Toast.makeText(RedAcmPtsActivity.this, "No se pudo realizar la operacion", Toast.LENGTH_SHORT).show();
+                }else {
+                    progressDialog.dismiss();
+                    try {
+                        traerDatosTransaccionFinalizada();
+                    }catch (Exception e){
+                        Log.w(TAG, "Error trayendo ultima transaccion: " );
+                    }
+                    finish();
+                    cargarActivityAnterior();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RedimirAcumular> call, Throwable t) {
+                progressDialog.dismiss();
+                finish();
+            }
+        });
     }
 
     private void traerDatosTransaccionFinalizada() {
 
-
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(getResources().getString(R.string.url_server))
-                .build();
-
-        ServicioUserApp servicioUserApp = retrofit.create(ServicioUserApp.class);
-
-        Map<String,String> datos = new HashMap<>();
-        datos.put("tck",getResources().getString(R.string.token));
-        datos.put("id_user",iduser);
-        datos.put("id_establecimiento",idTienda);
-        datos.put("tipo",tipoTienda);
-
-        Call<UserApp> call = servicioUserApp.traerUserApp(datos);
-
-        call.enqueue(new Callback<UserApp>() {
+        Connect.getInstance(this).get_user_qr(iduser, idTienda, tipoTienda, new Callback<Response_user>() {
             @Override
-            public void onResponse(Call<UserApp> call, Response<UserApp> response) {
-
-
+            public void onResponse(Call<Response_user> call, Response<Response_user> response) {
                 int toastDurationInMilliSeconds = 6000;
                 final Toast mToastToShow;
-                mToastToShow = Toast.makeText(getApplication(),
-                        "Transaccion Realizada para el usuario: "
-                        + response.body().getNombre()
+
+
+                String message_store = "Transaccion Realizada para el usuario: "
+                        + response.body().getUsuario().getNombre()
                         + "\n Nuevos puntos regalo : "
-                        + response.body().getPtos_globales()
-                        + "\n Nuevos Puntos Fidelizados : "
-                        + response.body().getPtos_fidelizados(), Toast.LENGTH_LONG);
+                        + response.body().getPuntosRegalo();
+
+                String message_station = "Transaccion Realizada para el usuario: "
+                        + response.body().getUsuario().getNombre()
+                        + "\n Nuevos Puntos placa "+btnPlaca.getText().toString()+" : "
+                        + puntos_placa(btnPlaca.getText().toString(), response.body().getPuntosPlacas());
+
+                if (tipoTienda.equals("E")) {
+                    mToastToShow = Toast.makeText(getApplication(), message_station, Toast.LENGTH_LONG);
+                } else {
+                    mToastToShow = Toast.makeText(getApplication(), message_store, Toast.LENGTH_LONG);
+                }
+
                 CountDownTimer toastCountDown;
                 toastCountDown = new CountDownTimer(toastDurationInMilliSeconds, 1000 /*Tick duration*/) {
                     public void onTick(long millisUntilFinished) {
@@ -414,19 +429,15 @@ public class RedAcmPtsActivity extends AppCompatActivity {
                 // Show the toast and starts the countdown
                 mToastToShow.show();
                 toastCountDown.start();
-
-
             }
 
             @Override
-            public void onFailure(Call<UserApp> call, Throwable t) {
+            public void onFailure(Call<Response_user> call, Throwable t) {
                 Log.e("Error cargando datos",t.getMessage());
                 Toast.makeText(RedAcmPtsActivity.this, "Error, Revise Su conexion ", Toast.LENGTH_SHORT).show();
                 finish();
-
             }
         });
-
     }
 
     private void cargarActivityAnterior() {
@@ -454,7 +465,6 @@ public class RedAcmPtsActivity extends AppCompatActivity {
 
         _imgUsuario = (SimpleDraweeView) findViewById(R.id.frescoImgUsuario);
 
-
         //_txtValorRedimirAcumular = (TextView) findViewById(R.id.txt_valorRedimirAcumular);
 
         _btnRedimirAcumularPts = (Button) findViewById(R.id.btn_RedimirAcumularPts);
@@ -474,6 +484,44 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         _txtPtsGlobales = (TextView) findViewById(R.id.txtPtsGlobalesUserAppRed);
         _txtPtsFidelizacion = (TextView) findViewById(R.id.txtPtsFidelizacionUserAppRed);
         _txtTipoVehiculo = (TextView) findViewById(R.id.txtTipoVehiculoUserAppRed);
+
+        tePuntosFidelizados = (TextView) findViewById(R.id.tePuntosFidelizados);
+        tePuntosRegalo = (TextView) findViewById(R.id.tePuntosRegalo);
+
+        tePuntosFidelizados.setVisibility(View.GONE);
+        _txtPtsFidelizacion.setVisibility(View.GONE);
+
+        tipoPuntos = (RadioGroup) findViewById(R.id.rbOpcionesTipoPuntos);
+        tipoPuntos.setVisibility(View.GONE);
+
+        btnPlaca = (Button) findViewById(R.id.btnPlaca);
+        btnPlaca.setVisibility(View.GONE);
+    }
+
+    private Boolean placa_redimible(String placa, int valor) {
+        Boolean result = false;
+        for (int i =0; i < placas.size(); i++) {
+            if (placas.get(i).getPlaca().equals(placa)) {
+                int puntos = Integer.parseInt(placas.get(i).getPuntos());
+                if (valor <= puntos ) {
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
+
+    private String puntos_placa(String placa, List<Placa> nuevas_placas) {
+        String result = "";
+        if (nuevas_placas != null) {
+            for (Placa placa1 :
+                    nuevas_placas) {
+                if (placa1.getPlaca().equals(placa)) {
+                    result = placa1.getPuntos();
+                }
+            }
+        }
+        return result;
     }
 
     @Override
@@ -488,10 +536,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
             intent = new Intent(getApplicationContext(), UsuarioActivity.class);
             intent.putExtra("iduser",iduser);
         }
-
-
         startActivity(intent);
-
     }
 
     @Override

@@ -16,6 +16,7 @@
         android:paddingLeft="24dp"
         android:paddingRight="24dp"
         android:weightSum="1">
+
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -115,17 +116,21 @@
                     android:textSize="18sp" />
 
                 <TextView
-                    android:textStyle="bold"
+                    android:id="@+id/tePuntosRegalo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Puntos Regalo:"
                     android:textSize="18sp"
-                    android:text="Puntos Regalo:"/>
+                    android:textStyle="bold" />
+
                 <TextView
-                    android:textStyle="bold"
+                    android:id="@+id/tePuntosFidelizados"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:text="Puntos Fidelización:"
                     android:textSize="18sp"
-                    android:text="Puntos Fidelización:"/>
+                    android:textStyle="bold" />
+
             </LinearLayout>
             <LinearLayout
                 android:orientation="vertical"
@@ -162,18 +167,28 @@
                     android:layout_height="wrap_content"
                     android:text="XXX"
                     android:textSize="18sp" />
+
             </LinearLayout>
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/btnPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/shape"
+            android:text="Selecciona la placa"
+            android:textColor="@color/white" />
+
         <RadioGroup
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/rbOpcionesPuntos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
             android:gravity="center"
             android:orientation="horizontal">
-
 
 
             <RadioButton
@@ -194,12 +209,11 @@
         </RadioGroup>
 
         <RadioGroup
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/rbOpcionesTipoPuntos"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
             android:layout_marginBottom="2dp"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <RadioButton
@@ -225,24 +239,28 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:hint="Valor en pesos $"
-            android:textSize="22sp"
-            android:inputType="number" />
+            android:inputType="number"
+            android:textSize="22sp" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_RedimirAcumularPts"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:background="@drawable/shape"
             android:padding="12dp"
-            android:text="Acumular"/>
+            android:text="Acumular"
+            android:textColor="@color/white" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_SalirRedm"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:background="@drawable/shape"
             android:padding="12dp"
-            android:text="Terminar"/>
+            android:text="Terminar"
+            android:textColor="@color/white" />
 
 
     </LinearLayout>

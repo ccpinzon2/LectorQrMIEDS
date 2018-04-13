@@ -8,11 +8,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.QueryMap;
 
-/**
- * Created by cristhianpinzon on 8/09/17.
- */
-
 public interface ServicioTraerGremio {
-    @GET("points.php")
+    @GET("GetGremOrTran.php")
     Call<TraerGremio> traerGremio(@QueryMap Map<String,String> datos);
 }

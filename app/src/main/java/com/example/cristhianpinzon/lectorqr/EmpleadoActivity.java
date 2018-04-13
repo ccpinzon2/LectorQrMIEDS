@@ -14,12 +14,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.cristhianpinzon.lectorqr.Logica.Response_user;
 import com.example.cristhianpinzon.lectorqr.Logica.Transacciones;
-import com.example.cristhianpinzon.lectorqr.Logica.UserApp;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
+import com.example.cristhianpinzon.lectorqr.Servicios.Connect;
 import com.example.cristhianpinzon.lectorqr.Servicios.ServicioTransaccionesEmpleado;
-import com.example.cristhianpinzon.lectorqr.Servicios.ServicioUserApp;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -47,7 +47,8 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
+public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+
     private String cedLogueado;
     private static final String TAG = "EmpleadoActivityClass";
     private TextView _txtNombreEds;
@@ -57,12 +58,8 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
     private TextView _txtDireccionTiendaEmp;
     private TextView _txtUltimaTransaccion;
     private TextView _txtUltimaCliente;
-
     private Button _btnCerrarSesionEmp;
-
-
     private ZXingScannerView mScannerView;
-
     private DatabaseAccess databaseAccess;
     private User user;
 
@@ -74,12 +71,9 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         setContentView(R.layout.activity_empleado);
         databaseAccess = new DatabaseAccess(this);
         traerEmpleado();
-
         beginComponents();
         cargarDatos();
-
         Log.w(TAG, "Empleado cedula,"  + cedLogueado);
-
     }
 
     private void cargarDatos() {
@@ -130,79 +124,37 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
                 cerrarSesionEmpleado();
             }
         });
-
-
-
     }
 
     private void ultimoCliente(String id_userapp) {
-
-      //  datos.put("id_user",iduser);
-      //  datos.put("id_establecimiento",idTienda);
-      //  datos.put("tipo",tipoTienda);
         databaseAccess.open();
-
-//        Log.w(TAG, "ultimoCliente: iduser->" + id_userapp + "idest ->" + databaseAccess.getUsers().get(0).getId_tienda()
-//            + "tipo->" + databaseAccess.getUsers().get(0).getTipo_tienda()
-//        ) ;
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(getResources().getString(R.string.url_server))
-                .build();
-        ServicioUserApp servicioUserApp = retrofit.create(ServicioUserApp.class);
-
-        Map<String,String> datos = new HashMap<>();
-
-          String idEds = databaseAccess.getUsers().get(0).getId_tienda();
-          datos.put("tck",getResources().getString(R.string.token));
-          datos.put("id_user",id_userapp);
-          datos.put("id_establecimiento",idEds);
-          datos.put("tipo","E");
-
-        Call<UserApp> call = servicioUserApp.traerUserApp(datos);
-
-        call.enqueue(new Callback<UserApp>() {
+        String idEds = databaseAccess.getUsers().get(0).getId_tienda();
+        Connect.getInstance(this).get_user_qr(id_userapp, idEds, "E", new Callback<Response_user>() {
             @Override
-            public void onResponse(Call<UserApp> call, Response<UserApp> response) {
-                String datos = response.body().getNombre() + "\n " + "Puntos Globales: " + response.body().getPtos_globales()
-                        +"\n Puntos Fidelizados: " + response.body().getPtos_fidelizados();
+            public void onResponse(Call<Response_user> call, Response<Response_user> response) {
+                String datos = response.body().getUsuario().getNombre();
                 _txtUltimaCliente.setText(datos);
             }
 
             @Override
-            public void onFailure(Call<UserApp> call, Throwable t) {
+            public void onFailure(Call<Response_user> call, Throwable t) {
                 _txtUltimaCliente.setError("Error Cargando Ultimo Cliente");
             }
         });
-
-
         databaseAccess.close();
-
-
-
     }
 
     private void ultimaTransaccion() {
         databaseAccess.open();
         //Toast.makeText(this, "cedula-> " + cedLΩogueado  + "idest-> " +databaseAccess.getUsers().get(0).getId_tienda(), Toast.LENGTH_SHORT).show();
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
-                .baseUrl(getResources().getString(R.string.url_server))
-                .build();
-
-        ServicioTransaccionesEmpleado servicioTransacciones = retrofit.create(ServicioTransaccionesEmpleado.class);
-
         Map<String,String> datos = new HashMap<>();
-        datos.put("tck",getResources().getString(R.string.token));
+        //datos.put("tck",getResources().getString(R.string.token));
         datos.put("op","transacciones");
         datos.put("idest",databaseAccess.getUsers().get(0).getId_tienda());
         datos.put("idemp",cedLogueado);
 
-        Call<List<Transacciones>> call = servicioTransacciones.traerTransacciones(datos);
-
-        call.enqueue(new Callback<List<Transacciones>>() {
+        Connect.getInstance(this).get_transactions(datos, new Callback<List<Transacciones>>() {
             @Override
             public void onResponse(Call<List<Transacciones>> call, Response<List<Transacciones>> response) {
                 if (!response.body().isEmpty()){
@@ -260,7 +212,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
             intent.putExtra("iduser",parts[1]);
             startActivity(intent);
             mScannerView.stopCamera();
-            //finish();
+            finish();
         }catch (Exception e){
             Log.e(TAG, "cambiarPuntaje: error leerqr ->  " + e.getMessage() );
             Toast.makeText(this, "Qr Incorrecto", Toast.LENGTH_SHORT).show();
@@ -268,7 +220,6 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
             finish();
             Intent intent = new Intent(getApplicationContext(),EmpleadoActivity.class);
             startActivity(intent);
-
         }
 
     }

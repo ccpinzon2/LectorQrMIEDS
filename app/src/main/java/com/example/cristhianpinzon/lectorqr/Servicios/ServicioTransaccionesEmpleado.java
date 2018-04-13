@@ -14,6 +14,6 @@ import retrofit2.http.QueryMap;
  */
 
 public interface ServicioTransaccionesEmpleado {
-    @GET("points.php")
+    @GET("GetGremOrTran.php")
     Call<List<Transacciones>> traerTransacciones (@QueryMap Map<String,String> datos);
 }

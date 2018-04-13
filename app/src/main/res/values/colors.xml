@@ -29,7 +29,7 @@
     </array>
 
     <color name="primary">#8BC34A</color>
-    <color name="primary_dark">#689F38</color>
+    <color name="primary_dark">#689f38</color>
     <color name="primary_darker">#689F38</color>
     <color name="primary_light">#DCEDC8</color>
     <color name="accent">#448AFF</color>
@@ -47,5 +47,5 @@
     <color name="aluminum">#999999</color>
     <color name="base">#AAAAAA</color>
     <color name="iron">#CCCCCC</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#ffffff</color>
 </resources>
