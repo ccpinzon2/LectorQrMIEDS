@@ -13,13 +13,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.example.cristhianpinzon.lectorqr.Logica.Response_user;
-import com.example.cristhianpinzon.lectorqr.Logica.Transacciones;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.DB.DatabaseAccess;
 import com.example.cristhianpinzon.lectorqr.Persistence.logic.User;
-import com.example.cristhianpinzon.lectorqr.Servicios.Connect;
-import com.example.cristhianpinzon.lectorqr.Servicios.ServicioTransaccionesEmpleado;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
@@ -35,17 +30,7 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.single.PermissionListener;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
@@ -56,8 +41,8 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
     private TextView _txtTelefonoTiendaEmp;
     private TextView _txtMarcaTiendaEmp;
     private TextView _txtDireccionTiendaEmp;
-    private TextView _txtUltimaTransaccion;
-    private TextView _txtUltimaCliente;
+    //private TextView _txtUltimaTransaccion;
+    //private TextView _txtUltimaCliente;
     private Button _btnCerrarSesionEmp;
     private ZXingScannerView mScannerView;
     private DatabaseAccess databaseAccess;
@@ -109,14 +94,14 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         _txtTelefonoTiendaEmp = (TextView) findViewById(R.id.txtTelefonoTiendaEmp);
         _txtMarcaTiendaEmp = (TextView) findViewById(R.id.txtMarcaTiendaEmp);
         _txtDireccionTiendaEmp = (TextView) findViewById(R.id.txtDireccionTiendaEmp);
-        _txtUltimaTransaccion = (TextView) findViewById(R.id.txtUltimaTransaccion);
-        _txtUltimaCliente = (TextView) findViewById(R.id.txtDatosUltimoCliente);
-        try {
+        //_txtUltimaTransaccion = (TextView) findViewById(R.id.txtUltimaTransaccion);
+        //_txtUltimaCliente = (TextView) findViewById(R.id.txtDatosUltimoCliente);
+        /**try {
             ultimaTransaccion();
 
         }catch (Exception e){
             Log.e(TAG, "beginComponents:  fallo traer ultima transaccion" + e.getMessage() );
-        }
+        }**/
         _btnCerrarSesionEmp = (Button) findViewById(R.id.btn_CerrarSesionEmp);
         _btnCerrarSesionEmp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,7 +111,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         });
     }
 
-    private void ultimoCliente(String id_userapp) {
+    /**private void ultimoCliente(String id_userapp) {
         databaseAccess.open();
         String idEds = databaseAccess.getUsers().get(0).getId_tienda();
         Connect.getInstance(this).get_user_qr(id_userapp, idEds, "E", new Callback<Response_user>() {
@@ -174,7 +159,7 @@ public class EmpleadoActivity extends AppCompatActivity implements ZXingScannerV
         });
 
         databaseAccess.close();
-    }
+    }**/
 
     private void cerrarSesionEmpleado() {
         databaseAccess.open();

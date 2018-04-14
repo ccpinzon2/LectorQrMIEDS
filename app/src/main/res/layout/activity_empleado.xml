@@ -128,36 +128,44 @@
             android:text="empleado1"
             android:textSize="15sp"
             android:paddingBottom="20dp"/>
+
         <TextView
-            android:layout_gravity=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity=""
             android:text="Última Transacción: "
             android:textColor="@color/primary_text"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:visibility="gone" />
+
         <TextView
-            android:layout_gravity=""
             android:id="@+id/txtUltimaTransaccion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity=""
+            android:paddingBottom="20dp"
             android:text="Cargando.."
             android:textSize="15sp"
-            android:paddingBottom="20dp"/>
+            android:visibility="gone" />
+
         <TextView
-            android:layout_gravity=""
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity=""
             android:text="Último Cliente: "
             android:textColor="@color/primary_text"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:visibility="gone" />
+
         <TextView
-            android:layout_gravity=""
             android:id="@+id/txtDatosUltimoCliente"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity=""
+            android:paddingBottom="20dp"
             android:text="Cargando.."
             android:textSize="15sp"
-            android:paddingBottom="20dp"/>
+            android:visibility="gone" />
 
 
         <Button

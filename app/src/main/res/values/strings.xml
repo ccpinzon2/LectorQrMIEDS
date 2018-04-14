@@ -2,7 +2,10 @@
     <string name="app_name">Puntos MiEDS</string>
     <string name="url_server">http://mieds.com/webserverv5/</string>
     <string name="token">ICD1305MIEDS</string>
-    <string name="msgcontactanos">Atrae, Sirve y Fideliza Clientes !!!</string>
+    <string name="msgcontactanos">Atrae y recibe a los usuarios de MI EDS Gasolina</string>
+
+    <string name="message_login">Aplicación para EDS DORADAS y Tiendas convenio que están dentro de la aplicación MI EDS Gasolina</string>
+
 
     <string name="title_activity_welcome">Home Screen</string>
     <string name="next">SIGUIENTE</string>
