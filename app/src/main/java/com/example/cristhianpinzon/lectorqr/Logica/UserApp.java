@@ -7,7 +7,7 @@ import java.util.List;
 
 public class UserApp {
 
-    @SerializedName("id_userapp")
+    @SerializedName("id_usuario")
     @Expose
     private String id;
 
@@ -23,7 +23,7 @@ public class UserApp {
     @Expose
     private String phone_user;
 
-    @SerializedName("nombre_usuario")
+    @SerializedName("nombres")
     @Expose
     private String nombre;
 

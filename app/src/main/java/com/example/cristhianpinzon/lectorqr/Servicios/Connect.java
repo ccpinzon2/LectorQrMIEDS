@@ -17,16 +17,20 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Connect {
 
-    private static final String URL_HOST = "http://mieds.com/wbserv6/";
+    // url server v6 http://mieds.com/wbserv6/
+    // url gus server http://mieds.com/GUSGUS/PUNTOSMIEDSWEBSERV/
 
+    private static final String URL_HOST = "http://mieds.com/GUSGUS/PUNTOSMIEDSWEBSERV/";
     private static Connect instance;
     private Retrofit retrofit;
+    private ConnectInterface connectInterface;
 
     private Connect(Context context) {
         retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(URL_HOST)
                 .build();
+        connectInterface = retrofit.create(ConnectInterface.class);
     }
 
     public static synchronized Connect getInstance(Context context) {
@@ -38,32 +42,27 @@ public class Connect {
     }
 
     public void login_app(Map<String,String> data, Callback<Response_login> response) {
-        ServicioLogin servicioLogin = retrofit.create(ServicioLogin.class);
-        Call<Response_login> call = servicioLogin.traerUsuarioLogin(data);
+        Call<Response_login> call = connectInterface.traerUsuarioLogin(data);
         call.enqueue(response);
     }
 
     public void validate_guild(Map<String,String> datos, Callback<TraerGremio> response) {
-        ServicioTraerGremio servicioTraerGremio = retrofit.create(ServicioTraerGremio.class);
-        Call<TraerGremio> call = servicioTraerGremio.traerGremio(datos);
+        Call<TraerGremio> call = connectInterface.traerGremio(datos);
         call.enqueue(response);
     }
 
     public void get_user_qr(String idUser, String idPlace, String type, Callback<Response_user> response) {
-        ServicioUserApp servicioUserApp = retrofit.create(ServicioUserApp.class);
-        Call<Response_user> call = servicioUserApp.traerUserApp(idUser, idPlace, type);
+        Call<Response_user> call = connectInterface.traerUserApp(idUser, idPlace, type);
         call.enqueue(response);
     }
 
     public void manage_points(Map<String,String> datos, Callback<RedimirAcumular> response) {
-        ServicioRedimirAcumular servicioRedimirAcumular = retrofit.create(ServicioRedimirAcumular.class);
-        Call<RedimirAcumular> call = servicioRedimirAcumular.traerResultado(datos);
+        Call<RedimirAcumular> call = connectInterface.traerResultado(datos);
         call.enqueue(response);
     }
 
     public void get_transactions(Map<String,String> data, Callback<List<Transacciones>> response) {
-        ServicioTransaccionesEmpleado servicioTransacciones = retrofit.create(ServicioTransaccionesEmpleado.class);
-        Call<List<Transacciones>> call = servicioTransacciones.traerTransacciones(data);
+        Call<List<Transacciones>> call = connectInterface.traerTransacciones(data);
         call.enqueue(response);
     }
 }

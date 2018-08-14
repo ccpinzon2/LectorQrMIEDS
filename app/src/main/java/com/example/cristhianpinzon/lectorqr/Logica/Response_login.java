@@ -1,7 +1,5 @@
 package com.example.cristhianpinzon.lectorqr.Logica;
 
-import java.util.List;
-
 public class Response_login {
 
     private String status;

@@ -1,9 +1,16 @@
 package com.example.cristhianpinzon.lectorqr.Logica;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class User_response {
 
+    @SerializedName("nombre")
+    @Expose
     private String nombre;
 
+    @SerializedName("id")
+    @Expose
     private String id;
 
     public String getNombre ()

@@ -1,18 +1,48 @@
 package com.example.cristhianpinzon.lectorqr.Logica;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class Tienda {
 
+    @SerializedName("nombre")
+    @Expose
     private String nombre;
+
+    @SerializedName("id")
+    @Expose
     private String id;
+
+    @SerializedName("direccion")
+    @Expose
     private String direccion;
+
+    @SerializedName("EstablishmentType")
+    @Expose
     private String tipoEstab;
+
+    @SerializedName("tipo")
+    @Expose
     private String tipo;
+
+    @SerializedName("telefono")
+    @Expose
     private String telefono;
+
+    @SerializedName("marca")
+    @Expose
     private String marca;
+
+    @SerializedName("logo_image")
+    @Expose
     private String logo_image;
+
+    @SerializedName("list_empleados")
+    @Expose
     private List<Empleado> employees;
+
+
 
     public String getNombre () {
         return nombre;

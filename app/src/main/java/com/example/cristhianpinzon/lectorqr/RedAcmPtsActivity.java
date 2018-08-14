@@ -347,7 +347,7 @@ public class RedAcmPtsActivity extends AppCompatActivity {
 
     private void transaccion_puntos() {
         String tipo_transaccion = (_rbAcumular.isChecked()) ? "A": "R";
-        String fidelizacion = (tipoTienda.equals("E")) ? "F" : "G";
+        String fidelizacion = (tipoTienda.equals("E")) ? "F" : "R";
 
         final ProgressDialog progressDialog = new ProgressDialog(RedAcmPtsActivity.this,R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
@@ -355,12 +355,12 @@ public class RedAcmPtsActivity extends AppCompatActivity {
         progressDialog.show();
 
         Map<String,String> datos = new HashMap<>();
-        datos.put("id_user",iduser);
+        datos.put("idUser",iduser);
         datos.put("valor",_EditValor.getText().toString());
         datos.put("tipo_tran",tipo_transaccion);
-        datos.put("idEmpTi",idRedem);
-        datos.put("tipo_estab",tipoTienda);
-        datos.put("tipoPunto",fidelizacion);
+        datos.put("idEstab",idRedem);
+        datos.put("EstablishmentType",tipoTienda);
+        datos.put("pointType",fidelizacion);
 
         if (tipoTienda.equals("E"))
             datos.put("placa", btnPlaca.getText().toString());

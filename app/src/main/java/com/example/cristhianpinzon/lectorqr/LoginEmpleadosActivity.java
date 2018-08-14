@@ -172,7 +172,7 @@ public class LoginEmpleadosActivity extends AppCompatActivity implements Adapter
         databaseAccess.close();
 
         Map<String,String> datos = new HashMap<>();
-        datos.put("op","traerGremio");
+        //datos.put("op","traerGremio");
         datos.put("idest",idEDS);
 
         Connect.getInstance(this).validate_guild(datos, new Callback<TraerGremio>() {
